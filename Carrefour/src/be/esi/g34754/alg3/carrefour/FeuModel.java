@@ -5,6 +5,7 @@
 package be.esi.g34754.alg3.carrefour;
 
 import be.esi.g34754.alg3.carrefour.interfaces.CarrefourView;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,9 +20,11 @@ public class FeuModel {
     public FeuModel() {
         feuxP=new FeuPieton[2];
         feuxV=new FeuVoiture[2];
+        listeners=new ArrayList<CarrefourView>();
     }
     
-    
-    
+    public void addListener(){
+        
+    }
     
 }
