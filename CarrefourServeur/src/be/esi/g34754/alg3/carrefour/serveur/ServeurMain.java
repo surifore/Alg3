@@ -20,7 +20,7 @@ public class ServeurMain {
         System.setSecurityManager(new RMISecurityManager());
         try {
             CarrefourServeurInterface serveur=new CarrefourServeurImpl();
-            java.rmi.Naming.rebind("Plan", serveur);
+            java.rmi.Naming.rebind("Carrefour", serveur);
         } catch (MalformedURLException ex) {
             JOptionPane.showMessageDialog(new JFrame(), "Erreur: l'URL fournie est mal formée", "MalformedURLException", JOptionPane.ERROR_MESSAGE);
             System.exit(1);
