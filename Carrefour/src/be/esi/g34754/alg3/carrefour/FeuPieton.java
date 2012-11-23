@@ -13,18 +13,22 @@ public class FeuPieton {
     private int vert;
     private int clignotement;
     private boolean enPanne;
+    private EtatFeu etat;
     
     public FeuPieton(){
         rouge=1;
         vert=1;
         clignotement=3;
+        enPanne=true;
+        etat=new EtatFeu(CouleurEnum.ROUGE, true);
     }
 
-    public FeuPieton(int rouge, int vert, int clignottement,boolean enPanne) {
+    public FeuPieton( int vert, int clignottement,int rouge) {
         this.rouge = rouge;
         this.vert = vert;
         this.clignotement = clignottement;
-        this.enPanne=enPanne;
+        this.enPanne=true;
+        etat=new EtatFeu(CouleurEnum.ROUGE, true);
     }
     
 
@@ -70,5 +74,30 @@ public class FeuPieton {
 
     public void setEnPanne(boolean enPanne) {
         this.enPanne = enPanne;
+    }
+
+    /**
+     * @return the etat
+     */
+    public EtatFeu getEtat() {
+        return etat;
+    }
+
+    /**
+     * @param etat the etat to set
+     */
+    public void setEtat(EtatFeu etat) {
+        this.etat = etat;
+    }
+    
+    /**
+     * @param etat the etat to set
+     */
+    public void setEtat(CouleurEnum color) {
+        etat.setCouleur(color);
+    }
+
+    void setClignotant(boolean b) {
+        etat.setClignotant(b);
     }
 }

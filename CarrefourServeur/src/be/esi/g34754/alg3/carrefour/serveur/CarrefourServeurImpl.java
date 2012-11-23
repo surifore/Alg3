@@ -4,8 +4,7 @@
  */
 package be.esi.g34754.alg3.carrefour.serveur;
 
-import be.esi.g34754.alg3.carrefour.FeuPieton;
-import be.esi.g34754.alg3.carrefour.FeuVoiture;
+import be.esi.g34754.alg3.carrefour.FeuModel;
 import be.esi.g34754.alg3.carrefour.interfaces.CarrefourServeurInterface;
 
 /**
@@ -14,10 +13,10 @@ import be.esi.g34754.alg3.carrefour.interfaces.CarrefourServeurInterface;
  */
 class CarrefourServeurImpl implements CarrefourServeurInterface {
     
-    private FeuPieton feuxPietons;
-    private FeuVoiture feuxVoitures;
+    private FeuModel feux;
 
     public CarrefourServeurImpl() {
+        feux=new FeuModel(5,2,8);
     }
     
 }

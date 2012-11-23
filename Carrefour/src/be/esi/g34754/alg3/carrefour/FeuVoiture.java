@@ -16,19 +16,22 @@ public class FeuVoiture {
     private int orange;
     private int vert;
     private boolean enPanne;
+    private EtatFeu etat;
 
     public FeuVoiture() {
         this.rouge = 1;
         this.orange = 1;
         this.vert = 1;
-        this.enPanne = false;
+        this.enPanne = true;
+        etat=new EtatFeu(CouleurEnum.ROUGE, true);
     }
 
-    public FeuVoiture(int rouge, int orange, int vert, boolean clignote) {
+    public FeuVoiture(int vert, int orange, int rouge) {
         this.rouge = rouge;
         this.orange = orange;
         this.vert = vert;
-        this.enPanne = clignote;
+        this.enPanne = true;
+        etat=new EtatFeu(CouleurEnum.ROUGE, true);
     }
 
 
@@ -87,4 +90,30 @@ public class FeuVoiture {
     public void setEnPanne(boolean enPanne) {
         this.enPanne = enPanne;
     }
+
+    /**
+     * @return the etat
+     */
+    public EtatFeu getEtat() {
+        return etat;
+    }
+
+    /**
+     * @param etat the etat to set
+     */
+    public void setEtat(EtatFeu etat) {
+        this.etat = etat;
+    }
+    
+    /**
+     * @param etat the etat to set
+     */
+    public void setEtat(CouleurEnum color) {
+        etat.setCouleur(color);
+    }
+
+    void setClignotant(boolean b) {
+        etat.setClignotant(b);
+    }
+    
 }
