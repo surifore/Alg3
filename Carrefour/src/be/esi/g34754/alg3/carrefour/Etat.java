@@ -90,13 +90,13 @@ public class Etat {
         str+=       "Feu voiture:" + feuxV_NS.getEtat().getCouleur() + " " 
                 + (feuxV_NS.getEtat().isClignotant()?"clignotant\n":"\n");
         str+=       "Feu pieton:" + feuxP_NS.getEtat().getCouleur() + " " 
-                + (feuxV_NS.getEtat().isClignotant()?"clignotant\n":"\n");
+                + (feuxP_NS.getEtat().isClignotant()?"clignotant\n":"\n");
         str+=       "Axe Est-Ouest:\n";
         str+=       "--------------\n";
         str+=       "Feu voiture:" + feuxV_EO.getEtat().getCouleur() + " " 
-                + (feuxV_NS.getEtat().isClignotant()?"clignotant\n":"\n");
+                + (feuxV_EO.getEtat().isClignotant()?"clignotant\n":"\n");
         str+=       "Feu pieton:" + feuxP_EO.getEtat().getCouleur() + " " 
-                + (feuxV_NS.getEtat().isClignotant()?"clignotant\n":"\n");
+                + (feuxP_EO.getEtat().isClignotant()?"clignotant\n":"\n");
         return str;
     }
 
