@@ -4,11 +4,13 @@
  */
 package be.esi.g34754.alg3.carrefour;
 
+import java.io.Serializable;
+
 /**
  *
  * @author g34754
  */
-public class FeuPieton {
+public class FeuPieton  implements Serializable{
     private int rouge;
     private int vert;
     private int clignotement;

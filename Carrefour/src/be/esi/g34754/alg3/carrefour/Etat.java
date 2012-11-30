@@ -1,12 +1,14 @@
 package be.esi.g34754.alg3.carrefour;
 
+import java.io.Serializable;
+
 /**
  * État des feux. Cet état peut transiter du modèle à une vue.
  *
  * Il s'agit d'un DTO (data transfer Object) dont le seul rôle est le stockage de données en vue de transfert.
  * 
  */
-public class Etat {
+public class Etat implements Serializable{
     private FeuPieton feuxP_NS;
     private FeuPieton feuxP_EO;
     private FeuVoiture feuxV_NS;

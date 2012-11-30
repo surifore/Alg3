@@ -4,11 +4,13 @@
  */
 package be.esi.g34754.alg3.carrefour;
 
+import java.io.Serializable;
+
 /**
  *
  * @author g34754
  */
-public class EtatFeu {
+public class EtatFeu  implements Serializable{
     private CouleurEnum couleur;
     private boolean clignotant;
 

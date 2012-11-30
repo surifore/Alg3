@@ -4,11 +4,13 @@
  */
 package be.esi.g34754.alg3.carrefour;
 
+import java.io.Serializable;
+
 /**
  *
  * @author g34754
  */
-public class FeuVoiture {
+public class FeuVoiture  implements Serializable{
     /**
      * La durée en minu
      */

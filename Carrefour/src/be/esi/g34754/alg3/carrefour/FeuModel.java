@@ -9,7 +9,6 @@ import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -21,12 +20,12 @@ public class FeuModel implements FeuModeleInterface, Serializable {
     
     private List<CarrefourView> vues;
     private Etat etat;
-    private Timer demarrage;
+    private TimerCarrefour demarrage;
 
     public FeuModel() {
         etat=new Etat();
         vues=new ArrayList<CarrefourView>();
-        demarrage=new Timer();
+        demarrage=new TimerCarrefour();
         demarrage.schedule(new CarrefourTask(etat),0,1000);
     }
 
@@ -34,13 +33,13 @@ public class FeuModel implements FeuModeleInterface, Serializable {
         etat=new Etat(new FeuPieton(vert, orange, rouge), new FeuPieton(vert, orange, rouge),
                 new FeuVoiture(vert, orange, rouge), new FeuVoiture(vert,orange,rouge));
         vues=new ArrayList<CarrefourView>();
-        demarrage=new Timer();
+        demarrage=new TimerCarrefour();
         demarrage.schedule(new CarrefourTask(etat),0,1000);
     }
 
     @Override
     public Etat getEtat() {
-        demarrage=new Timer();
+        demarrage=new TimerCarrefour();
         return new Etat(etat.getFeuxP_NS(),etat.getFeuxP_EO(),etat.getFeuxV_NS(),etat.getFeuxV_EO());
     }
 

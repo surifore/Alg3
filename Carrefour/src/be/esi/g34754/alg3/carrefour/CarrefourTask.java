@@ -24,6 +24,7 @@ public class CarrefourTask extends TimerTask {
         etat.setFeuxV_EO(new EtatFeu(CouleurEnum.ROUGE, false));
     }
 
+    //TODO vérifier que pas erreur dans carrefour avant de faire fire et si incorrect met tt en panne
     @Override
     public void run() {
         mAJPieton(etat.getFeuxP_NS());
