@@ -4,6 +4,12 @@
  */
 package be.esi.g34754.alg3.carrefour.client.adm;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author g34754
@@ -15,6 +21,15 @@ public class ClientAdm extends javax.swing.JFrame {
      */
     public ClientAdm() {
         initComponents();
+        Properties prop = new Properties();
+        try {
+            prop.load(new FileInputStream("dureeFeux.properties"));
+            setMaximum(prop);
+            setMinimum(prop);
+        } catch (IOException ex) {
+            setMaximum();
+            setMinimum();
+        }
     }
 
     /**
@@ -54,24 +69,36 @@ public class ClientAdm extends javax.swing.JFrame {
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Feux Voitures", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(0, 0, 51))); // NOI18N
 
         VNSRouge.setBackground(new java.awt.Color(255, 0, 51));
-        VNSRouge.setMajorTickSpacing(1);
+        VNSRouge.setMajorTickSpacing(5);
         VNSRouge.setMaximum(5);
+        VNSRouge.setMinimum(1);
+        VNSRouge.setMinorTickSpacing(1);
         VNSRouge.setPaintLabels(true);
+        VNSRouge.setPaintTicks(true);
 
         VNSVert.setBackground(new java.awt.Color(51, 255, 51));
-        VNSVert.setMajorTickSpacing(1);
+        VNSVert.setMajorTickSpacing(5);
         VNSVert.setMaximum(5);
+        VNSVert.setMinimum(1);
+        VNSVert.setMinorTickSpacing(1);
         VNSVert.setPaintLabels(true);
+        VNSVert.setPaintTicks(true);
 
         VEORouge.setBackground(new java.awt.Color(255, 0, 51));
-        VEORouge.setMajorTickSpacing(1);
+        VEORouge.setMajorTickSpacing(5);
         VEORouge.setMaximum(5);
+        VEORouge.setMinimum(1);
+        VEORouge.setMinorTickSpacing(1);
         VEORouge.setPaintLabels(true);
+        VEORouge.setPaintTicks(true);
 
         VEOOrange.setBackground(new java.awt.Color(255, 153, 51));
-        VEOOrange.setMajorTickSpacing(1);
+        VEOOrange.setMajorTickSpacing(5);
         VEOOrange.setMaximum(5);
+        VEOOrange.setMinimum(1);
+        VEOOrange.setMinorTickSpacing(1);
         VEOOrange.setPaintLabels(true);
+        VEOOrange.setPaintTicks(true);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel1.setText("Axe Nord - Sud");
@@ -80,14 +107,20 @@ public class ClientAdm extends javax.swing.JFrame {
         jLabel2.setText("Axe Est - Ouest");
 
         VNSOrange.setBackground(new java.awt.Color(255, 153, 51));
-        VNSOrange.setMajorTickSpacing(1);
+        VNSOrange.setMajorTickSpacing(5);
         VNSOrange.setMaximum(5);
+        VNSOrange.setMinimum(1);
+        VNSOrange.setMinorTickSpacing(1);
         VNSOrange.setPaintLabels(true);
+        VNSOrange.setPaintTicks(true);
 
         VEOVert.setBackground(new java.awt.Color(51, 255, 51));
-        VEOVert.setMajorTickSpacing(1);
+        VEOVert.setMajorTickSpacing(5);
         VEOVert.setMaximum(5);
+        VEOVert.setMinimum(1);
+        VEOVert.setMinorTickSpacing(1);
         VEOVert.setPaintLabels(true);
+        VEOVert.setPaintTicks(true);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -137,24 +170,36 @@ public class ClientAdm extends javax.swing.JFrame {
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Feux Pietons", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(0, 0, 51))); // NOI18N
 
         PNSRouge.setBackground(new java.awt.Color(255, 0, 51));
-        PNSRouge.setMajorTickSpacing(1);
+        PNSRouge.setMajorTickSpacing(5);
         PNSRouge.setMaximum(5);
+        PNSRouge.setMinimum(1);
+        PNSRouge.setMinorTickSpacing(1);
         PNSRouge.setPaintLabels(true);
+        PNSRouge.setPaintTicks(true);
 
         PNSVert.setBackground(new java.awt.Color(51, 255, 51));
-        PNSVert.setMajorTickSpacing(1);
+        PNSVert.setMajorTickSpacing(5);
         PNSVert.setMaximum(5);
+        PNSVert.setMinimum(1);
+        PNSVert.setMinorTickSpacing(1);
         PNSVert.setPaintLabels(true);
+        PNSVert.setPaintTicks(true);
 
         PEORouge.setBackground(new java.awt.Color(255, 0, 51));
-        PEORouge.setMajorTickSpacing(1);
+        PEORouge.setMajorTickSpacing(5);
         PEORouge.setMaximum(5);
+        PEORouge.setMinimum(1);
+        PEORouge.setMinorTickSpacing(1);
         PEORouge.setPaintLabels(true);
+        PEORouge.setPaintTicks(true);
 
         PEOOrange.setBackground(new java.awt.Color(255, 153, 51));
-        PEOOrange.setMajorTickSpacing(1);
+        PEOOrange.setMajorTickSpacing(5);
         PEOOrange.setMaximum(5);
+        PEOOrange.setMinimum(1);
+        PEOOrange.setMinorTickSpacing(1);
         PEOOrange.setPaintLabels(true);
+        PEOOrange.setPaintTicks(true);
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel3.setText("Axe Nord - Sud");
@@ -163,14 +208,20 @@ public class ClientAdm extends javax.swing.JFrame {
         jLabel4.setText("Axe Est - Ouest");
 
         PNSOrange.setBackground(new java.awt.Color(255, 153, 51));
-        PNSOrange.setMajorTickSpacing(1);
+        PNSOrange.setMajorTickSpacing(5);
         PNSOrange.setMaximum(5);
+        PNSOrange.setMinimum(1);
+        PNSOrange.setMinorTickSpacing(1);
         PNSOrange.setPaintLabels(true);
+        PNSOrange.setPaintTicks(true);
 
         PEOVert.setBackground(new java.awt.Color(51, 255, 51));
-        PEOVert.setMajorTickSpacing(1);
+        PEOVert.setMajorTickSpacing(5);
         PEOVert.setMaximum(5);
+        PEOVert.setMinimum(1);
+        PEOVert.setMinorTickSpacing(1);
         PEOVert.setPaintLabels(true);
+        PEOVert.setPaintTicks(true);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -267,7 +318,7 @@ public class ClientAdm extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 72, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(appliquer)
                     .addComponent(annuler)
@@ -284,17 +335,19 @@ public class ClientAdm extends javax.swing.JFrame {
 
     private void appliquerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_appliquerActionPerformed
         // TODO add your handling code here:
+        //TODO mettre tout au rouge puis setmodel
     }//GEN-LAST:event_appliquerActionPerformed
 
     private void annulerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_annulerActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_annulerActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        
+    public static void main(String[] args) {
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new ClientAdm().setVisible(true);
+            }
+        });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSlider PEOOrange;
@@ -319,4 +372,62 @@ public class ClientAdm extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JButton visualiser;
     // End of variables declaration//GEN-END:variables
+
+    private void setMaximum(Properties prop) {
+        VNSVert.setMaximum(Integer.parseInt(prop.getProperty("maxVert", "15")));
+        VNSOrange.setMaximum(Integer.parseInt(prop.getProperty("maxOrange", "10")));
+        VNSRouge.setMaximum(Integer.parseInt(prop.getProperty("maxRouge", "20")));
+        PNSVert.setMaximum(Integer.parseInt(prop.getProperty("maxVert", "15")));
+        PNSOrange.setMaximum(Integer.parseInt(prop.getProperty("maxOrange", "10")));
+        PNSRouge.setMaximum(Integer.parseInt(prop.getProperty("maxRouge", "20")));
+        VEOVert.setMaximum(Integer.parseInt(prop.getProperty("maxVert", "15")));
+        VEOOrange.setMaximum(Integer.parseInt(prop.getProperty("maxOrange", "10")));
+        VEORouge.setMaximum(Integer.parseInt(prop.getProperty("maxRouge", "20")));
+        PEOVert.setMaximum(Integer.parseInt(prop.getProperty("maxVert", "15")));
+        PEOOrange.setMaximum(Integer.parseInt(prop.getProperty("maxOrange", "10")));
+        PEORouge.setMaximum(Integer.parseInt(prop.getProperty("maxRouge", "20")));
+    }
+    private void setMinimum(Properties prop) {
+        VNSVert.setMinimum(Integer.parseInt(prop.getProperty("minVert", "3")));
+        VNSOrange.setMinimum(Integer.parseInt(prop.getProperty("minOrange", "1")));
+        VNSRouge.setMinimum(Integer.parseInt(prop.getProperty("minRouge", "5")));
+        PNSVert.setMinimum(Integer.parseInt(prop.getProperty("minVert", "3")));
+        PNSOrange.setMinimum(Integer.parseInt(prop.getProperty("minOrange", "1")));
+        PNSRouge.setMinimum(Integer.parseInt(prop.getProperty("minRouge", "5")));
+        VEOVert.setMinimum(Integer.parseInt(prop.getProperty("minVert", "3")));
+        VEOOrange.setMinimum(Integer.parseInt(prop.getProperty("minOrange", "1")));
+        VEORouge.setMinimum(Integer.parseInt(prop.getProperty("minRouge", "5")));
+        PEOVert.setMinimum(Integer.parseInt(prop.getProperty("minVert", "3")));
+        PEOOrange.setMinimum(Integer.parseInt(prop.getProperty("minOrange", "1")));
+        PEORouge.setMinimum(Integer.parseInt(prop.getProperty("minRouge", "5")));
+    }
+    
+    private void setMaximum() {
+        VNSVert.setMaximum(15);
+        VNSOrange.setMaximum(10);
+        VNSRouge.setMaximum(20);
+        PNSVert.setMaximum(15);
+        PNSOrange.setMaximum(10);
+        PNSRouge.setMaximum(20);
+        VEOVert.setMaximum(15);
+        VEOOrange.setMaximum(10);
+        VEORouge.setMaximum(20);
+        PEOVert.setMaximum(15);
+        PEOOrange.setMaximum(10);
+        PEORouge.setMaximum(20);
+    }
+    private void setMinimum() {
+        VNSVert.setMinimum(3);
+        VNSOrange.setMinimum(1);
+        VNSRouge.setMinimum(5);
+        PNSVert.setMinimum(3);
+        PNSOrange.setMinimum(1);
+        PNSRouge.setMinimum(5);
+        VEOVert.setMinimum(3);
+        VEOOrange.setMinimum(1);
+        VEORouge.setMinimum(5);
+        PEOVert.setMinimum(3);
+        PEOOrange.setMinimum(1);
+        PEORouge.setMinimum(5);
+    }
 }
