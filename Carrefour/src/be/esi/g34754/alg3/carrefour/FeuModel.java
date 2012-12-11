@@ -4,6 +4,7 @@
  */
 package be.esi.g34754.alg3.carrefour;
 
+import be.esi.g34754.alg3.carrefour.interfaces.CarrefourServeurInterface;
 import be.esi.g34754.alg3.carrefour.interfaces.CarrefourView;
 import java.io.Serializable;
 import java.rmi.RemoteException;
@@ -22,19 +23,19 @@ public class FeuModel implements FeuModeleInterface, Serializable {
     private Etat etat;
     private TimerCarrefour demarrage;
 
-    public FeuModel() {
+    public FeuModel(CarrefourServeurInterface serveur) {
         etat=new Etat();
         vues=new ArrayList<CarrefourView>();
         demarrage=new TimerCarrefour();
-        demarrage.schedule(new CarrefourTask(etat),0,1000);
+        demarrage.schedule(new CarrefourTask(etat,serveur),0,1000);
     }
 
-    public FeuModel(int vert, int orange, int rouge) {
+    public FeuModel(int vert, int orange, int rouge,CarrefourServeurInterface serveur) {
         etat=new Etat(new FeuPieton(vert, orange, rouge), new FeuPieton(vert, orange, rouge),
                 new FeuVoiture(vert, orange, rouge), new FeuVoiture(vert,orange,rouge));
         vues=new ArrayList<CarrefourView>();
         demarrage=new TimerCarrefour();
-        demarrage.schedule(new CarrefourTask(etat),0,1000);
+        demarrage.schedule(new CarrefourTask(etat,serveur),0,1000);
     }
 
     @Override

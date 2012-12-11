@@ -10,6 +10,7 @@ import be.esi.g34754.alg3.carrefour.interfaces.CarrefourServeurInterface;
 import be.esi.g34754.alg3.carrefour.interfaces.CarrefourView;
 import be.esi.g34754.rmioutils.Connection;
 import java.awt.Color;
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,20 +19,26 @@ import java.util.logging.Logger;
  *
  * @author g34754
  */
-public class FeuPietonView extends javax.swing.JFrame implements CarrefourView {
+public class FeuPietonView extends javax.swing.JFrame implements Serializable {
 
     private CarrefourServeurInterface serveur;
+    private CarrefourView client;
 
     /**
      * Creates new form FeuPieto
      */
     public FeuPietonView(CarrefourServeurInterface serveur) {
-        initComponents();
-        this.serveur = serveur;
-        ledRouge.setColor(Color.red);
-        ledVert.setColor(Color.green);
-        initLed();
-        serveur.addListener(this);
+        try {
+            initComponents();
+            this.serveur = serveur;
+            ledRouge.setColor(Color.red);
+            ledVert.setColor(Color.green);
+            client = new FeuPietonImpl(this);
+            initLed();
+            serveur.addListener(client);
+        } catch (RemoteException ex) {
+            Logger.getLogger(FeuPietonView.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -46,8 +53,8 @@ public class FeuPietonView extends javax.swing.JFrame implements CarrefourView {
         jPanel1 = new javax.swing.JPanel();
         axe = new javax.swing.JComboBox();
         jButton1 = new javax.swing.JButton();
-        led1 = new be.esi.g34754.alg3.carrefour.outils.Led();
-        led2 = new be.esi.g34754.alg3.carrefour.outils.Led();
+        ledRouge = new be.esi.g34754.alg3.carrefour.outils.Led();
+        ledVert = new be.esi.g34754.alg3.carrefour.outils.Led();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Feu Pieton");
@@ -87,25 +94,25 @@ public class FeuPietonView extends javax.swing.JFrame implements CarrefourView {
             }
         });
 
-        javax.swing.GroupLayout led1Layout = new javax.swing.GroupLayout(led1);
-        led1.setLayout(led1Layout);
-        led1Layout.setHorizontalGroup(
-            led1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+        javax.swing.GroupLayout ledRougeLayout = new javax.swing.GroupLayout(ledRouge);
+        ledRouge.setLayout(ledRougeLayout);
+        ledRougeLayout.setHorizontalGroup(
+            ledRougeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
         );
-        led1Layout.setVerticalGroup(
-            led1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        ledRougeLayout.setVerticalGroup(
+            ledRougeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 100, Short.MAX_VALUE)
         );
 
-        javax.swing.GroupLayout led2Layout = new javax.swing.GroupLayout(led2);
-        led2.setLayout(led2Layout);
-        led2Layout.setHorizontalGroup(
-            led2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+        javax.swing.GroupLayout ledVertLayout = new javax.swing.GroupLayout(ledVert);
+        ledVert.setLayout(ledVertLayout);
+        ledVertLayout.setHorizontalGroup(
+            ledVertLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
         );
-        led2Layout.setVerticalGroup(
-            led2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        ledVertLayout.setVerticalGroup(
+            ledVertLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 100, Short.MAX_VALUE)
         );
 
@@ -113,14 +120,15 @@ public class FeuPietonView extends javax.swing.JFrame implements CarrefourView {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(led2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(led1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ledRouge, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ledVert, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -130,10 +138,10 @@ public class FeuPietonView extends javax.swing.JFrame implements CarrefourView {
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(led1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(ledRouge, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(led2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                .addComponent(ledVert, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addContainerGap())
         );
@@ -142,6 +150,7 @@ public class FeuPietonView extends javax.swing.JFrame implements CarrefourView {
     }// </editor-fold>//GEN-END:initComponents
 
     private void axeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_axeActionPerformed
+        initLed();
     }//GEN-LAST:event_axeActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -164,25 +173,19 @@ public class FeuPietonView extends javax.swing.JFrame implements CarrefourView {
     private javax.swing.JComboBox axe;
     private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
-    private be.esi.g34754.alg3.carrefour.outils.Led led1;
-    private be.esi.g34754.alg3.carrefour.outils.Led led2;
+    private be.esi.g34754.alg3.carrefour.outils.Led ledRouge;
+    private be.esi.g34754.alg3.carrefour.outils.Led ledVert;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public void notifieChangement() throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    private void initLed() {
+    public void initLed(){    
+        try{
         if (axe.getSelectedIndex() == 0) {
-            try {
-                led(serveur.getModel().getEtat().getFeuxP_NS());
-
-            } catch (RemoteException ex) {
-                //TODO gestion du passage en panne et de la recherche du retour du serveur
-                Logger.getLogger(FeuPietonView.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            led(serveur.getModel().getEtat().getFeuxP_NS());
         } else {
+            led(serveur.getModel().getEtat().getFeuxP_EO());
+        }
+        }catch(RemoteException ex){
+            Logger.getLogger(FeuPietonView.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -191,20 +194,20 @@ public class FeuPietonView extends javax.swing.JFrame implements CarrefourView {
             ledRouge.setOn(false);
             ledVert.setOn(false);
         } else {
-            if(feu.getEtat().getCouleur()==CouleurEnum.VERT){
-                if(feu.getEtat().isClignotant()){
+            if (feu.getEtat().getCouleur() == CouleurEnum.VERT) {
+                if (feu.getEtat().isClignotant()) {
                     ledRouge.setOn(false);
                     ledVert.setOn(true);
                     ledVert.setClignotant(true);
-                }else{
+                } else {
                     ledRouge.setOn(false);
                     ledVert.setOn(true);
                     ledVert.setClignotant(false);
                 }
-            }else{
+            } else {
                 ledRouge.setOn(true);
-                    ledVert.setOn(false);
-                    ledVert.setClignotant(false);
+                ledVert.setOn(false);
+                ledVert.setClignotant(false);
             }
         }
     }
