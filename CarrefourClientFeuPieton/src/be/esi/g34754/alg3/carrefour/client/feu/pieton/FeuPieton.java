@@ -33,9 +33,11 @@ public class FeuPieton extends javax.swing.JPanel implements Serializable {
             ledRouge.setColor(Color.red);
             ledVert.setColor(Color.green);
             client = new FeuPietonImpl(this);
-            axeNS=true;
-            initLed();
-            serveur.addListener(client);
+            axeNS = true;
+            if (serveur != null) {
+                initLed();
+                serveur.addListener(client);
+            }
         } catch (RemoteException ex) {
             Logger.getLogger(FeuPietonView.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -57,6 +59,9 @@ public class FeuPieton extends javax.swing.JPanel implements Serializable {
         ledVert = new be.esi.g34754.alg3.carrefour.outils.Led();
         ledRouge = new be.esi.g34754.alg3.carrefour.outils.Led();
 
+        setMaximumSize(new java.awt.Dimension(103, 213));
+        setMinimumSize(new java.awt.Dimension(103, 213));
+
         ledVert.setColor(java.awt.Color.green);
 
         javax.swing.GroupLayout ledVertLayout = new javax.swing.GroupLayout(ledVert);
@@ -77,7 +82,7 @@ public class FeuPieton extends javax.swing.JPanel implements Serializable {
         ledRouge.setLayout(ledRougeLayout);
         ledRougeLayout.setHorizontalGroup(
             ledRougeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 103, Short.MAX_VALUE)
         );
         ledRougeLayout.setVerticalGroup(
             ledRougeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -88,33 +93,34 @@ public class FeuPieton extends javax.swing.JPanel implements Serializable {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(ledRouge, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(ledVert, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(ledRouge, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(ledVert, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(ledRouge, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(ledRouge, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ledVert, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(ledVert, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private be.esi.g34754.alg3.carrefour.outils.Led ledRouge;
     private be.esi.g34754.alg3.carrefour.outils.Led ledVert;
     // End of variables declaration//GEN-END:variables
-    
-    public void initLed(){    
-        try{
-        if (axeNS) {
-            led(serveur.getModel().getEtat().getFeuxP_NS());
-        } else {
-            led(serveur.getModel().getEtat().getFeuxP_EO());
-        }
-        }catch(RemoteException ex){
-            Logger.getLogger(FeuPietonView.class.getName()).log(Level.SEVERE, null, ex);
+
+    public void initLed() {
+        if (serveur != null) {
+            try {
+                if (axeNS) {
+                    led(serveur.getModel().getEtat().getFeuxP_NS());
+                } else {
+                    led(serveur.getModel().getEtat().getFeuxP_EO());
+                }
+            } catch (RemoteException ex) {
+                Logger.getLogger(FeuPietonView.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 

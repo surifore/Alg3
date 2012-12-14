@@ -33,9 +33,11 @@ public class FeuVoiture extends javax.swing.JPanel implements Serializable {
             ledRouge.setColor(Color.red);
             ledVert.setColor(Color.green);
             client = new FeuVoitureImpl(this);
-            axeNS=true;
-            initLed();            
-            serveur.addListener(client);
+            axeNS = true;
+            if (serveur != null) {
+                initLed();
+                serveur.addListener(client);
+            }
         } catch (RemoteException ex) {
             Logger.getLogger(FeuVoiture.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -44,6 +46,7 @@ public class FeuVoiture extends javax.swing.JPanel implements Serializable {
     public void setAxeNS(boolean axeNS) {
         this.axeNS = axeNS;
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -57,13 +60,16 @@ public class FeuVoiture extends javax.swing.JPanel implements Serializable {
         ledRouge = new be.esi.g34754.alg3.carrefour.outils.Led();
         ledOrange = new be.esi.g34754.alg3.carrefour.outils.Led();
 
+        setMaximumSize(new java.awt.Dimension(106, 317));
+        setMinimumSize(new java.awt.Dimension(106, 317));
+
         ledVert.setColor(java.awt.Color.green);
 
         javax.swing.GroupLayout ledVertLayout = new javax.swing.GroupLayout(ledVert);
         ledVert.setLayout(ledVertLayout);
         ledVertLayout.setHorizontalGroup(
             ledVertLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 106, Short.MAX_VALUE)
         );
         ledVertLayout.setVerticalGroup(
             ledVertLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -77,7 +83,7 @@ public class FeuVoiture extends javax.swing.JPanel implements Serializable {
         ledRouge.setLayout(ledRougeLayout);
         ledRougeLayout.setHorizontalGroup(
             ledRougeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 106, Short.MAX_VALUE)
         );
         ledRougeLayout.setVerticalGroup(
             ledRougeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -101,8 +107,8 @@ public class FeuVoiture extends javax.swing.JPanel implements Serializable {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(ledVert, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(ledRouge, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(ledVert, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(ledRouge, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addComponent(ledOrange, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
@@ -111,7 +117,7 @@ public class FeuVoiture extends javax.swing.JPanel implements Serializable {
                 .addComponent(ledRouge, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ledOrange, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(ledVert, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -122,14 +128,16 @@ public class FeuVoiture extends javax.swing.JPanel implements Serializable {
     // End of variables declaration//GEN-END:variables
 
     public void initLed() {
-        try {
-            if (axeNS) {
-                led(serveur.getModel().getEtat().getFeuxV_NS());
-            } else {
-                led(serveur.getModel().getEtat().getFeuxV_EO());
+        if (serveur != null) {
+            try {
+                if (axeNS) {
+                    led(serveur.getModel().getEtat().getFeuxV_NS());
+                } else {
+                    led(serveur.getModel().getEtat().getFeuxV_EO());
+                }
+            } catch (RemoteException ex) {
+                Logger.getLogger(FeuVoiture.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } catch (RemoteException ex) {
-            Logger.getLogger(FeuVoiture.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

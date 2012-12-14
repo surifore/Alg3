@@ -24,6 +24,7 @@ public class Led extends javax.swing.JPanel implements Serializable {
     private boolean clignote;
     private Timer clignoteTimer;
     private boolean on;
+    private short multiplicateur;
     /**
      * Le cercle qui simule la Led.
      */
@@ -49,6 +50,7 @@ public class Led extends javax.swing.JPanel implements Serializable {
         oval = new Ellipse2D.Double(0, 0, getWidth(), getHeight());
         clignote = false;
         clignoteTimer = new Timer();
+        multiplicateur=1;
     }
 
     /**
@@ -126,10 +128,26 @@ public class Led extends javax.swing.JPanel implements Serializable {
             this.clignote=clignote;
             if (this.clignote) {
                 clignoteTimer=new Timer();
-                clignoteTimer.schedule(new LedTimerTask(this), 0, 500);
+                clignoteTimer.schedule(new LedTimerTask(this), 0, multiplicateur*500);
             }else{
                 clignoteTimer.cancel();
             }
         }
+    }
+
+    /**
+     * @return the multiplicateur
+     */
+    public short getMultiplicateur() {
+        return multiplicateur;
+    }
+
+    /**
+     * @param multiplicateur the multiplicateur to set
+     */
+    public void setMultiplicateur(short multiplicateur) {
+        if(multiplicateur<=0)
+            throw new IllegalArgumentException("Le multiplicateur de vitesse ne peut pas être négatif ou nul.");
+        this.multiplicateur = multiplicateur;
     }
 }
