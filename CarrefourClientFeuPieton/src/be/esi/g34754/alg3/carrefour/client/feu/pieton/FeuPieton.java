@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package be.esi.g34754.alg3.carrefour.client.feu.voiture;
+package be.esi.g34754.alg3.carrefour.client.feu.pieton;
 
 import be.esi.g34754.alg3.carrefour.CouleurEnum;
 import be.esi.g34754.alg3.carrefour.interfaces.CarrefourServeurInterface;
@@ -15,9 +15,9 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author g34754
+ * @author Florian
  */
-public class FeuVoiture extends javax.swing.JPanel implements Serializable {
+public class FeuPieton extends javax.swing.JPanel implements Serializable {
 
     private CarrefourServeurInterface serveur;
     private CarrefourView client;
@@ -26,24 +26,25 @@ public class FeuVoiture extends javax.swing.JPanel implements Serializable {
     /**
      * Creates new form FeuPieto
      */
-    public FeuVoiture(CarrefourServeurInterface serveur) {
+    public FeuPieton(CarrefourServeurInterface serveur) {
         try {
             initComponents();
             this.serveur = serveur;
             ledRouge.setColor(Color.red);
             ledVert.setColor(Color.green);
-            client = new FeuVoitureImpl(this);
+            client = new FeuPietonImpl(this);
             axeNS=true;
-            initLed();            
+            initLed();
             serveur.addListener(client);
         } catch (RemoteException ex) {
-            Logger.getLogger(FeuVoiture.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FeuPietonView.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     public void setAxeNS(boolean axeNS) {
         this.axeNS = axeNS;
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -55,7 +56,6 @@ public class FeuVoiture extends javax.swing.JPanel implements Serializable {
 
         ledVert = new be.esi.g34754.alg3.carrefour.outils.Led();
         ledRouge = new be.esi.g34754.alg3.carrefour.outils.Led();
-        ledOrange = new be.esi.g34754.alg3.carrefour.outils.Led();
 
         ledVert.setColor(java.awt.Color.green);
 
@@ -63,11 +63,11 @@ public class FeuVoiture extends javax.swing.JPanel implements Serializable {
         ledVert.setLayout(ledVertLayout);
         ledVertLayout.setHorizontalGroup(
             ledVertLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 103, Short.MAX_VALUE)
         );
         ledVertLayout.setVerticalGroup(
             ledVertLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 103, Short.MAX_VALUE)
+            .addGap(0, 98, Short.MAX_VALUE)
         );
 
         ledRouge.setClignotant(false);
@@ -81,77 +81,62 @@ public class FeuVoiture extends javax.swing.JPanel implements Serializable {
         );
         ledRougeLayout.setVerticalGroup(
             ledRougeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 102, Short.MAX_VALUE)
-        );
-
-        ledOrange.setColor(java.awt.Color.orange);
-
-        javax.swing.GroupLayout ledOrangeLayout = new javax.swing.GroupLayout(ledOrange);
-        ledOrange.setLayout(ledOrangeLayout);
-        ledOrangeLayout.setHorizontalGroup(
-            ledOrangeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 106, Short.MAX_VALUE)
-        );
-        ledOrangeLayout.setVerticalGroup(
-            ledOrangeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+            .addGap(0, 98, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(ledVert, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(ledRouge, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(ledOrange, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(ledVert, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(ledRouge, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(ledRouge, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ledOrange, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ledVert, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(ledVert, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private be.esi.g34754.alg3.carrefour.outils.Led ledOrange;
     private be.esi.g34754.alg3.carrefour.outils.Led ledRouge;
     private be.esi.g34754.alg3.carrefour.outils.Led ledVert;
     // End of variables declaration//GEN-END:variables
-
-    public void initLed() {
-        try {
-            if (axeNS) {
-                led(serveur.getModel().getEtat().getFeuxV_NS());
-            } else {
-                led(serveur.getModel().getEtat().getFeuxV_EO());
-            }
-        } catch (RemoteException ex) {
-            Logger.getLogger(FeuVoiture.class.getName()).log(Level.SEVERE, null, ex);
+    
+    public void initLed(){    
+        try{
+        if (axeNS) {
+            led(serveur.getModel().getEtat().getFeuxP_NS());
+        } else {
+            led(serveur.getModel().getEtat().getFeuxP_EO());
+        }
+        }catch(RemoteException ex){
+            Logger.getLogger(FeuPietonView.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    private void led(be.esi.g34754.alg3.carrefour.FeuVoiture feu) {
+    private void led(be.esi.g34754.alg3.carrefour.FeuPieton feu) {
         if (feu.isEnPanne()) {
             ledRouge.setOn(false);
-            ledOrange.setOn(true);
-            ledOrange.setClignotant(true);
             ledVert.setOn(false);
         } else {
             if (feu.getEtat().getCouleur() == CouleurEnum.VERT) {
-                ledRouge.setOn(false);
-                ledOrange.setOn(false);
-                ledVert.setOn(true);
-            } else if (feu.getEtat().getCouleur() == CouleurEnum.ORANGE) {
-                ledRouge.setOn(false);
-                ledOrange.setOn(true);
-                ledVert.setOn(false);
+                if (feu.getEtat().isClignotant()) {
+                    ledRouge.setOn(false);
+                    ledVert.setOn(true);
+                    ledVert.setClignotant(true);
+                } else {
+                    ledRouge.setOn(false);
+                    ledVert.setOn(true);
+                    ledVert.setClignotant(false);
+                }
             } else {
                 ledRouge.setOn(true);
-                ledOrange.setOn(false);
                 ledVert.setOn(false);
+                ledVert.setClignotant(false);
             }
         }
     }

@@ -4,41 +4,26 @@
  */
 package be.esi.g34754.alg3.carrefour.client.feu.pieton;
 
-import be.esi.g34754.alg3.carrefour.CouleurEnum;
-import be.esi.g34754.alg3.carrefour.FeuPieton;
 import be.esi.g34754.alg3.carrefour.interfaces.CarrefourServeurInterface;
-import be.esi.g34754.alg3.carrefour.interfaces.CarrefourView;
 import be.esi.g34754.rmioutils.Connection;
-import java.awt.Color;
-import java.io.Serializable;
-import java.rmi.RemoteException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.awt.FlowLayout;
 
 /**
  *
  * @author g34754
  */
-public class FeuPietonView extends javax.swing.JFrame implements Serializable {
+public class FeuPietonView extends javax.swing.JFrame {
 
-    private CarrefourServeurInterface serveur;
-    private CarrefourView client;
+    private FeuPieton feu;
 
     /**
-     * Creates new form FeuPieto
+     * Creates new form FeuPietonView
      */
     public FeuPietonView(CarrefourServeurInterface serveur) {
-        try {
-            initComponents();
-            this.serveur = serveur;
-            ledRouge.setColor(Color.red);
-            ledVert.setColor(Color.green);
-            client = new FeuPietonImpl(this);
-            initLed();
-            serveur.addListener(client);
-        } catch (RemoteException ex) {
-            Logger.getLogger(FeuPietonView.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        initComponents();
+        setTitle("Feu Pieton");
+        feu=new FeuPieton(serveur);
+        panel.add(feu);
     }
 
     /**
@@ -52,9 +37,8 @@ public class FeuPietonView extends javax.swing.JFrame implements Serializable {
 
         jPanel1 = new javax.swing.JPanel();
         axe = new javax.swing.JComboBox();
-        jButton1 = new javax.swing.JButton();
-        ledRouge = new be.esi.g34754.alg3.carrefour.outils.Led();
-        ledVert = new be.esi.g34754.alg3.carrefour.outils.Led();
+        panel = new javax.swing.JPanel();
+        poussoir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Feu Pieton");
@@ -87,54 +71,19 @@ public class FeuPietonView extends javax.swing.JFrame implements Serializable {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jButton1.setText("Moi d'abord!");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
-        ledRouge.setClignotant(false);
-        ledRouge.setColor(java.awt.Color.red);
-
-        javax.swing.GroupLayout ledRougeLayout = new javax.swing.GroupLayout(ledRouge);
-        ledRouge.setLayout(ledRougeLayout);
-        ledRougeLayout.setHorizontalGroup(
-            ledRougeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        ledRougeLayout.setVerticalGroup(
-            ledRougeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 102, Short.MAX_VALUE)
-        );
-
-        ledVert.setColor(java.awt.Color.green);
-
-        javax.swing.GroupLayout ledVertLayout = new javax.swing.GroupLayout(ledVert);
-        ledVert.setLayout(ledVertLayout);
-        ledVertLayout.setHorizontalGroup(
-            ledVertLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        ledVertLayout.setVerticalGroup(
-            ledVertLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 103, Short.MAX_VALUE)
-        );
+        poussoir.setText("Moi d'abord");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(ledVert, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(ledRouge, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(poussoir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -142,24 +91,19 @@ public class FeuPietonView extends javax.swing.JFrame implements Serializable {
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ledRouge, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panel, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ledVert, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addContainerGap())
+                .addComponent(poussoir)
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void axeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_axeActionPerformed
-        initLed();
+        feu.setAxeNS(axe.getSelectedIndex()==0?true:false);
+        feu.initLed();
     }//GEN-LAST:event_axeActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -175,44 +119,8 @@ public class FeuPietonView extends javax.swing.JFrame implements Serializable {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox axe;
-    private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
-    private be.esi.g34754.alg3.carrefour.outils.Led ledRouge;
-    private be.esi.g34754.alg3.carrefour.outils.Led ledVert;
+    private javax.swing.JPanel panel;
+    private javax.swing.JButton poussoir;
     // End of variables declaration//GEN-END:variables
-
-    public void initLed(){    
-        try{
-        if (axe.getSelectedIndex() == 0) {
-            led(serveur.getModel().getEtat().getFeuxP_NS());
-        } else {
-            led(serveur.getModel().getEtat().getFeuxP_EO());
-        }
-        }catch(RemoteException ex){
-            Logger.getLogger(FeuPietonView.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    private void led(FeuPieton feu) {
-        if (feu.isEnPanne()) {
-            ledRouge.setOn(false);
-            ledVert.setOn(false);
-        } else {
-            if (feu.getEtat().getCouleur() == CouleurEnum.VERT) {
-                if (feu.getEtat().isClignotant()) {
-                    ledRouge.setOn(false);
-                    ledVert.setOn(true);
-                    ledVert.setClignotant(true);
-                } else {
-                    ledRouge.setOn(false);
-                    ledVert.setOn(true);
-                    ledVert.setClignotant(false);
-                }
-            } else {
-                ledRouge.setOn(true);
-                ledVert.setOn(false);
-                ledVert.setClignotant(false);
-            }
-        }
-    }
 }

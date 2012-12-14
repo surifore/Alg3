@@ -40,7 +40,11 @@ public class CarrefourTask extends TimerTask {
         restant[2] = mAJ(etat.getFeuxV_NS(), restant[2]);
         restant[3] = mAJ(etat.getFeuxV_EO(), restant[3]);
         model.notifierChangement();
-        if (stop > 3) {
+        if ((etat.getFeuxP_NS().isStop()&&etat.getFeuxP_NS().etat.getCouleur().equals(CouleurEnum.ROUGE))&&
+            (etat.getFeuxV_NS().isStop()&&etat.getFeuxV_NS().etat.getCouleur().equals(CouleurEnum.ROUGE))&&
+            (etat.getFeuxP_EO().isStop()&&etat.getFeuxP_EO().etat.getCouleur().equals(CouleurEnum.ROUGE))&&
+            (etat.getFeuxV_EO().isStop()&&etat.getFeuxV_EO().etat.getCouleur().equals(CouleurEnum.ROUGE))) {
+            
             model.setEnPanne();
         }
         System.out.println(etat);
@@ -62,7 +66,6 @@ public class CarrefourTask extends TimerTask {
                         restant = feu.setEtatSuivant();
                     }
                     restant--;
-                    stop++;
                 }
             }
         }

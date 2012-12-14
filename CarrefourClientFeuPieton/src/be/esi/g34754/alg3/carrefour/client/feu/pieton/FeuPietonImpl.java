@@ -13,9 +13,9 @@ import java.rmi.server.UnicastRemoteObject;
  * @author Florian
  */
 class FeuPietonImpl extends UnicastRemoteObject implements CarrefourView {
-    private FeuPietonView parent;
+    private FeuPieton parent;
 
-    public FeuPietonImpl(FeuPietonView aThis) throws RemoteException{
+    public FeuPietonImpl(FeuPieton aThis) throws RemoteException{
         this.parent=aThis;
     }
 
