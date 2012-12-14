@@ -16,34 +16,41 @@ import java.util.List;
  *
  * @author g34754
  */
-class CarrefourServeurImpl extends UnicastRemoteObject implements CarrefourServeurInterface {
+class CarrefourServeurImpl extends UnicastRemoteObject implements CarrefourServeurInterface, CarrefourView {
     
     private FeuModel feux;
     private List<CarrefourView> clients;
+    private List<CarrefourView> clientsSave;
 
     public CarrefourServeurImpl() throws RemoteException{
         feux=new FeuModel(5,2,8,this);
         clients=new ArrayList<CarrefourView>();
+        clientsSave=new ArrayList<CarrefourView>();
+        feux.addCarrefourListener(this);
     }
 
     @Override
     public void addListener(CarrefourView client) throws RemoteException{
         clients.add(client);
-        System.out.println("Ajouté");
+        clientsSave.add(client);
+        feux.addCarrefourListener(this);
     }
 
     @Override
     public FeuModel getModel() throws RemoteException {
         return feux;
     }
-
+    
     @Override
-    public void notifierChangement() throws RemoteException {
-        System.out.println("clients:"+clients);
-        for(CarrefourView client:clients){
-            client.notifieChangement();
-            System.out.println("notification");
-        }            
+    public void notifieChangement(){
+        for(CarrefourView client:clientsSave){
+            try {
+                client.notifieChangement();
+            } catch (RemoteException ex) {
+                clients.remove(client);
+                feux.setStop();
+            }
+        }
     }
     
 }

@@ -18,6 +18,7 @@ public abstract class Feu implements Serializable {
     protected boolean enPanne;
     protected boolean pieton;
     protected EtatFeu etat;
+    protected boolean stop;
 
     public int setEtatSuivant() {
         int restant = -1;
@@ -139,4 +140,13 @@ public abstract class Feu implements Serializable {
     public void setEtat(boolean clignotant) {
         etat.setClignotant(clignotant);
     }
+    
+    public boolean isStop() {
+        return stop;
+    }
+
+    public void setStop(boolean stop) {
+        this.stop = stop;
+    }
+
 }

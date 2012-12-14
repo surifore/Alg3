@@ -23,5 +23,9 @@ public interface FeuModeleInterface {
      * permet à la vue de se désabonner en tant qu'observateur du modèle
      */
     public void removeCarrefourListener(CarrefourView add);
+    
+    public void notifierChangement();
+
+    public void setEnPanne();
 
 }
