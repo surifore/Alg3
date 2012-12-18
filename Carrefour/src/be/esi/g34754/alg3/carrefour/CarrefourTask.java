@@ -14,10 +14,10 @@ public class CarrefourTask extends TimerTask {
 
     private Etat etat;
     private int[] restant;
-    private FeuModeleInterface model;
+    private FeuModel model;
     private short stop;
 
-    public CarrefourTask(Etat etat, FeuModeleInterface model) {
+    public CarrefourTask(Etat etat, FeuModel model) {
         this.model = model;
         this.etat = etat;
         this.stop = 0;

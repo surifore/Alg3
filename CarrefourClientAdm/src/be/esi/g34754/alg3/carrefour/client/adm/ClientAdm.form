@@ -39,7 +39,7 @@
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="jLabel5" min="-2" pref="134" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jSlider1" min="-2" pref="262" max="-2" attributes="0"/>
+                      <Component id="vitesseVisu" min="-2" pref="262" max="-2" attributes="0"/>
                       <EmptySpace pref="56" max="32767" attributes="0"/>
                       <Component id="visualiser" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -66,7 +66,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" max="-2" attributes="0">
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jSlider1" alignment="3" max="32767" attributes="0"/>
+                      <Component id="vitesseVisu" alignment="3" max="32767" attributes="0"/>
                       <Component id="visualiser" alignment="3" max="32767" attributes="0"/>
                       <Component id="annuler" alignment="3" max="32767" attributes="0"/>
                       <Component id="appliquer" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -525,7 +525,7 @@
         </Container>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JSlider" name="jSlider1">
+    <Component class="javax.swing.JSlider" name="vitesseVisu">
       <Properties>
         <Property name="majorTickSpacing" type="int" value="1"/>
         <Property name="maximum" type="int" value="10"/>

@@ -19,20 +19,19 @@ import javax.swing.JOptionPane;
  *
  * @author g34754
  */
-public class FeuModel implements FeuModeleInterface, Serializable {
+public class FeuModel implements Serializable {
 
     private List<CarrefourView> vues;
     private Etat etat;
     private TimerCarrefour demarrage;
 
-    public FeuModel(CarrefourServeurInterface serveur) {
+    public FeuModel() {
         etat = new Etat();
         vues = new ArrayList<CarrefourView>();
         demarrage = new TimerCarrefour();
-        demarrage.schedule(new CarrefourTask(etat, this), 0, 1000);
     }
 
-    public FeuModel(int vert, int orange, int rouge, CarrefourServeurInterface serveur) {
+    public FeuModel(int vert, int orange, int rouge) {
         etat = new Etat(new FeuPieton(vert, orange, rouge), new FeuPieton(vert, orange, rouge),
                 new FeuVoiture(vert, orange, rouge), new FeuVoiture(vert, orange, rouge));
         vues = new ArrayList<CarrefourView>();
@@ -40,25 +39,21 @@ public class FeuModel implements FeuModeleInterface, Serializable {
         demarrage.schedule(new CarrefourTask(etat, this), 0, 1000);
     }
 
-    @Override
     public Etat getEtat() {
         demarrage = new TimerCarrefour();
         return new Etat(etat.getFeuxP_NS(), etat.getFeuxP_EO(), etat.getFeuxV_NS(), etat.getFeuxV_EO());
     }
 
-    @Override
     public void addCarrefourListener(CarrefourView add) {
         vues.add(add);
         fire();
     }
 
-    @Override
     public void removeCarrefourListener(CarrefourView add) {
         vues.remove(add);
         fire();
     }
 
-    @Override
     public void notifierChangement() {
         fire();
     }
@@ -82,12 +77,22 @@ public class FeuModel implements FeuModeleInterface, Serializable {
         etat.getFeuxV_NS().setStop(true);
     }
 
-    @Override
     public void setEnPanne() {
         etat.getFeuxP_EO().setEnPanne(true);
         etat.getFeuxV_EO().setEnPanne(true);
         etat.getFeuxP_NS().setEnPanne(true);
         etat.getFeuxV_NS().setEnPanne(true);
         fire();
+    }
+
+    public void setFeux(CarrefourDto c) {
+        etat.getFeuxP_EO().setFeux(c.getpEOVert(),c.getpEOOrange(),c.getpEORouge());
+        etat.getFeuxV_EO().setFeux(c.getvEOVert(),c.getvEOOrange(),c.getvEORouge());
+        etat.getFeuxP_NS().setFeux(c.getpNSVert(),c.getpNSOrange(),c.getpNSRouge());
+        etat.getFeuxV_NS().setFeux(c.getvNSVert(),c.getvNSOrange(),c.getvNSRouge());
+    }
+
+    public void start(int value) {
+        demarrage.schedule(new CarrefourTask(etat, this), 0, value*1000);
     }
 }

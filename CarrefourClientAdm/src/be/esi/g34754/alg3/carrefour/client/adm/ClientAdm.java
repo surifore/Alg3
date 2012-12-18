@@ -4,9 +4,11 @@
  */
 package be.esi.g34754.alg3.carrefour.client.adm;
 
+import be.esi.g34754.alg3.carrefour.CarrefourDto;
 import be.esi.g34754.alg3.carrefour.FeuModel;
 import be.esi.g34754.alg3.carrefour.client.feu.pieton.FeuPieton;
 import be.esi.g34754.alg3.carrefour.client.feu.voiture.FeuVoiture;
+import be.esi.g34754.alg3.carrefour.interfaces.CarrefourServeurInterface;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
@@ -19,22 +21,24 @@ public class ClientAdm extends javax.swing.JFrame {
 
     private FeuModel model;
     private Properties prop;
+    private CarrefourServeurInterface serveur;
 
     /**
      * Creates new form ClientAdm
      */
-    public ClientAdm() {
+    public ClientAdm(CarrefourServeurInterface serveur) {
         initComponents();
+        this.serveur=serveur;
         prop = new Properties();
         try {
             prop.load(new FileInputStream("src/be/esi/g34754/alg3/carrefour/client/adm/dureeFeux.properties"));
         } catch (IOException ex) {
         }
         initSliders();
-        axeNS.add(new FeuPieton(null));
-        axeNS.add(new FeuVoiture(null));
-        axeEO.add(new FeuPieton(null));
-        axeEO.add(new FeuVoiture(null));
+        axeNS.add(new FeuPieton(serveur,true));
+        axeNS.add(new FeuVoiture(serveur,true));
+        axeEO.add(new FeuPieton(serveur,true));
+        axeEO.add(new FeuVoiture(serveur,true));
     }
 
     /**
@@ -70,7 +74,7 @@ public class ClientAdm extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         axeNS = new javax.swing.JPanel();
         axeEO = new javax.swing.JPanel();
-        jSlider1 = new javax.swing.JSlider();
+        vitesseVisu = new javax.swing.JSlider();
         jLabel5 = new javax.swing.JLabel();
         fermer = new javax.swing.JButton();
 
@@ -322,10 +326,10 @@ public class ClientAdm extends javax.swing.JFrame {
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Prévisualisation", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, new java.awt.Color(0, 0, 0)));
 
         axeNS.setBorder(javax.swing.BorderFactory.createTitledBorder("Axe Nord - Sud"));
-        axeNS.setLayout(new java.awt.GridLayout());
+        axeNS.setLayout(new java.awt.GridLayout(1, 0));
 
         axeEO.setBorder(javax.swing.BorderFactory.createTitledBorder("Axe Est - Ouest"));
-        axeEO.setLayout(new java.awt.GridLayout());
+        axeEO.setLayout(new java.awt.GridLayout(1, 0));
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -348,14 +352,14 @@ public class ClientAdm extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jSlider1.setMajorTickSpacing(1);
-        jSlider1.setMaximum(10);
-        jSlider1.setMinimum(1);
-        jSlider1.setPaintLabels(true);
-        jSlider1.setPaintTicks(true);
-        jSlider1.setSnapToTicks(true);
-        jSlider1.setToolTipText("");
-        jSlider1.setName(""); // NOI18N
+        vitesseVisu.setMajorTickSpacing(1);
+        vitesseVisu.setMaximum(10);
+        vitesseVisu.setMinimum(1);
+        vitesseVisu.setPaintLabels(true);
+        vitesseVisu.setPaintTicks(true);
+        vitesseVisu.setSnapToTicks(true);
+        vitesseVisu.setToolTipText("");
+        vitesseVisu.setName(""); // NOI18N
 
         jLabel5.setText("Vitesse de la visualisation:");
 
@@ -379,7 +383,7 @@ public class ClientAdm extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(vitesseVisu, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
                         .addComponent(visualiser)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -402,7 +406,7 @@ public class ClientAdm extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jSlider1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(vitesseVisu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(visualiser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(annuler, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(appliquer)
@@ -415,12 +419,19 @@ public class ClientAdm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void visualiserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_visualiserActionPerformed
-        // TODO add your handling code here:
+        model=new FeuModel();
+        model.setFeux(new CarrefourDto(PEOVert.getValue(), PEOOrange.getValue(), PEORouge.getValue(), 
+                VEOVert.getValue(), VEOOrange.getValue(), VEORouge.getValue(),
+                PNSVert.getValue(), PNSOrange.getValue(), PNSRouge.getValue(),
+                VNSVert.getValue(), VNSOrange.getValue(), VNSRouge.getValue()));
+        model.start(vitesseVisu.getValue());
+        pack();
     }//GEN-LAST:event_visualiserActionPerformed
 
     private void appliquerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_appliquerActionPerformed
-        // TODO add your handling code here:
-        //TODO mettre tout au rouge puis setmodel
+        if(valide()){
+            
+        }
     }//GEN-LAST:event_appliquerActionPerformed
 
     private void annulerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_annulerActionPerformed
@@ -464,8 +475,8 @@ public class ClientAdm extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JSlider jSlider1;
     private javax.swing.JButton visualiser;
+    private javax.swing.JSlider vitesseVisu;
     // End of variables declaration//GEN-END:variables
 
     private void setMaximum(Properties prop) {
@@ -517,5 +528,9 @@ public class ClientAdm extends javax.swing.JFrame {
         setMaximum(prop);
         setMinimum(prop);
         setCurrentValues(prop);
+    }
+
+    private boolean valide() {
+        throw new UnsupportedOperationException("Not yet implemented");
     }
 }

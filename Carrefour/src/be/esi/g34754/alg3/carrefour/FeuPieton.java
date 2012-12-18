@@ -21,12 +21,18 @@ public class FeuPieton extends Feu implements Serializable{
         pieton=true;
     }
 
-    public FeuPieton( int vert, int clignottement,int rouge) {
+    public FeuPieton( int vert, int orange,int rouge) {
         this.rouge = rouge;
         this.vert = vert;
-        this.orange = clignottement;
+        this.orange = orange;
         this.enPanne=false;
         etat=new EtatFeu(CouleurEnum.ORANGE, true);
         pieton=true;
+    }
+
+    void setFeux(int vert, int orange, int rouge) {
+        this.rouge = rouge;
+        this.vert = vert;
+        this.orange = orange;
     }
 }

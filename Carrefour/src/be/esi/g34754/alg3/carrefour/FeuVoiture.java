@@ -30,5 +30,11 @@ public class FeuVoiture extends Feu implements Serializable{
         etat=new EtatFeu(CouleurEnum.ROUGE, true);
         pieton=false;
     }
+
+    void setFeux(int vert, int orange, int rouge) {
+        this.rouge = rouge;
+        this.vert = vert;
+        this.orange = orange;
+    }
     
 }
