@@ -28,4 +28,5 @@ public interface FeuModeleInterface {
 
     public void setEnPanne();
 
+    public int getVitesse();
 }

@@ -4,14 +4,11 @@
  */
 package be.esi.g34754.alg3.carrefour;
 
-import be.esi.g34754.alg3.carrefour.interfaces.CarrefourServeurInterface;
 import be.esi.g34754.alg3.carrefour.interfaces.CarrefourView;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -24,20 +21,23 @@ public class FeuModel implements FeuModeleInterface, Serializable {
     private List<CarrefourView> vues;
     private Etat etat;
     private TimerCarrefour demarrage;
+    protected int vitesse;
 
-    public FeuModel(CarrefourServeurInterface serveur) {
+    public FeuModel(int vitesse) {
         etat = new Etat();
         vues = new ArrayList<CarrefourView>();
         demarrage = new TimerCarrefour();
-        demarrage.schedule(new CarrefourTask(etat, this), 0, 1000);
+        this.vitesse=vitesse;
+        demarrage.schedule(new CarrefourTask(etat, this), 0, 1000/vitesse);
     }
 
-    public FeuModel(int vert, int orange, int rouge, CarrefourServeurInterface serveur) {
-        etat = new Etat(new FeuPieton(vert, orange, rouge), new FeuPieton(vert, orange, rouge),
-                new FeuVoiture(vert, orange, rouge), new FeuVoiture(vert, orange, rouge));
+    public FeuModel(int vert, int orange, int rouge,int vitesse) {
+        etat = new Etat(new FeuPieton(vert, orange, rouge,1), new FeuPieton(vert, orange, rouge,1),
+                new FeuVoiture(vert, orange, rouge,1), new FeuVoiture(vert, orange, rouge,1));
         vues = new ArrayList<CarrefourView>();
         demarrage = new TimerCarrefour();
-        demarrage.schedule(new CarrefourTask(etat, this), 0, 1000);
+        this.vitesse=vitesse;
+        demarrage.schedule(new CarrefourTask(etat, this), 0, 1000/vitesse);
     }
 
     @Override
@@ -89,5 +89,12 @@ public class FeuModel implements FeuModeleInterface, Serializable {
         etat.getFeuxP_NS().setEnPanne(true);
         etat.getFeuxV_NS().setEnPanne(true);
         fire();
+    }
+
+    /**
+     * @return the vitesse
+     */
+    public int getVitesse() {
+        return vitesse;
     }
 }

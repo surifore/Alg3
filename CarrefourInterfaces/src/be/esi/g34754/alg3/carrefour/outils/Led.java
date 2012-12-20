@@ -24,7 +24,7 @@ public class Led extends javax.swing.JPanel implements Serializable {
     private boolean clignote;
     private Timer clignoteTimer;
     private boolean on;
-    private short multiplicateur;
+    private int multiplicateur;
     /**
      * Le cercle qui simule la Led.
      */
@@ -50,7 +50,7 @@ public class Led extends javax.swing.JPanel implements Serializable {
         oval = new Ellipse2D.Double(0, 0, getWidth(), getHeight());
         clignote = false;
         clignoteTimer = new Timer();
-        multiplicateur=1;
+        multiplicateur = 1;
     }
 
     /**
@@ -125,11 +125,11 @@ public class Led extends javax.swing.JPanel implements Serializable {
 
     public void setClignotant(boolean clignote) {
         if (this.clignote != clignote) {
-            this.clignote=clignote;
+            this.clignote = clignote;
             if (this.clignote) {
-                clignoteTimer=new Timer();
-                clignoteTimer.schedule(new LedTimerTask(this), 0, multiplicateur*500);
-            }else{
+                clignoteTimer = new Timer();
+                clignoteTimer.schedule(new LedTimerTask(this), 0, 500/multiplicateur);
+            } else {
                 clignoteTimer.cancel();
             }
         }
@@ -138,16 +138,17 @@ public class Led extends javax.swing.JPanel implements Serializable {
     /**
      * @return the multiplicateur
      */
-    public short getMultiplicateur() {
+    public int getMultiplicateur() {
         return multiplicateur;
     }
 
     /**
      * @param multiplicateur the multiplicateur to set
      */
-    public void setMultiplicateur(short multiplicateur) {
-        if(multiplicateur<=0)
+    public void setMultiplicateur(int multiplicateur) {
+        if (multiplicateur <= 0) {
             throw new IllegalArgumentException("Le multiplicateur de vitesse ne peut pas être négatif ou nul.");
+        }
         this.multiplicateur = multiplicateur;
     }
 }

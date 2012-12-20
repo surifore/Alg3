@@ -5,6 +5,7 @@
 package be.esi.g34754.alg3.carrefour.serveur;
 
 import be.esi.g34754.alg3.carrefour.FeuModel;
+import be.esi.g34754.alg3.carrefour.FeuModeleInterface;
 import be.esi.g34754.alg3.carrefour.interfaces.CarrefourServeurInterface;
 import be.esi.g34754.alg3.carrefour.interfaces.CarrefourView;
 import java.rmi.RemoteException;
@@ -23,7 +24,7 @@ class CarrefourServeurImpl extends UnicastRemoteObject implements CarrefourServe
     private List<CarrefourView> clientsSave;
 
     public CarrefourServeurImpl() throws RemoteException{
-        feux=new FeuModel(5,2,8,this);
+        feux=new FeuModel(5,2,8,1);
         clients=new ArrayList<CarrefourView>();
         clientsSave=new ArrayList<CarrefourView>();
         feux.addCarrefourListener(this);
@@ -37,7 +38,7 @@ class CarrefourServeurImpl extends UnicastRemoteObject implements CarrefourServe
     }
 
     @Override
-    public FeuModel getModel() throws RemoteException {
+    public FeuModeleInterface getModel() throws RemoteException {
         return feux;
     }
     
