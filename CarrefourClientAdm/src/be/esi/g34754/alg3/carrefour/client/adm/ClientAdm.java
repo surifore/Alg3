@@ -8,9 +8,15 @@ import be.esi.g34754.alg3.carrefour.Feu;
 import be.esi.g34754.alg3.carrefour.FeuModel;
 import be.esi.g34754.alg3.carrefour.client.feu.pieton.FeuPieton;
 import be.esi.g34754.alg3.carrefour.client.feu.voiture.FeuVoiture;
+import be.esi.g34754.alg3.carrefour.interfaces.CarrefourServeurInterface;
+import be.esi.g34754.alg3.carrefour.interfaces.CarrefourView;
+import be.esi.g34754.rmioutils.Connection;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -19,6 +25,8 @@ import java.util.Properties;
 public class ClientAdm extends javax.swing.JFrame {
 
     private FeuModel model;
+    private CarrefourServeurInterface serveur;
+    private CarrefourView client;
     private Properties prop;
     private FeuPieton feuP_NS;
     private FeuPieton feuP_EO;
@@ -28,12 +36,19 @@ public class ClientAdm extends javax.swing.JFrame {
     /**
      * Creates new form ClientAdm
      */
-    public ClientAdm() {
+    public ClientAdm(CarrefourServeurInterface serveur) {
         initComponents();
         prop = new Properties();
         try {
             prop.load(new FileInputStream("src/be/esi/g34754/alg3/carrefour/client/adm/dureeFeux.properties"));
         } catch (IOException ex) {
+        }
+        this.serveur=serveur;
+        try {
+            this.client=new ClientAdmImpl(this);
+            serveur.addListener(client);
+        } catch (RemoteException ex) {
+            Logger.getLogger(ClientAdm.class.getName()).log(Level.SEVERE, null, ex);
         }
         initSliders();
         feuP_EO=new FeuPieton();
@@ -465,8 +480,13 @@ public class ClientAdm extends javax.swing.JFrame {
     }//GEN-LAST:event_visualiserActionPerformed
 
     private void appliquerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_appliquerActionPerformed
-        // TODO add your handling code here:
-        //TODO mettre tout au rouge puis setmodel
+        if(valide()){
+            try {
+                serveur.setArret();
+            } catch (RemoteException ex) {
+                Logger.getLogger(ClientAdm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }//GEN-LAST:event_appliquerActionPerformed
 
     private void annulerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_annulerActionPerformed
@@ -478,11 +498,13 @@ public class ClientAdm extends javax.swing.JFrame {
     }//GEN-LAST:event_fermerActionPerformed
 
     public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ClientAdm().setVisible(true);
-            }
-        });
+        Connection<CarrefourServeurInterface> conn = new Connection("Carrefour", "localhost", 1099);
+        conn.setVisible(true);
+        CarrefourServeurInterface model;
+        model = conn.getRemoteObject();
+        ClientAdm gui = new ClientAdm(model);
+        gui.setVisible(true);
+        gui.pack();
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSlider PEOOrange;
@@ -529,6 +551,7 @@ public class ClientAdm extends javax.swing.JFrame {
         PEOVert.setMaximum(Integer.parseInt(prop.getProperty("maxVert", "15")));
         PEOOrange.setMaximum(Integer.parseInt(prop.getProperty("maxOrange", "10")));
         PEORouge.setMaximum(Integer.parseInt(prop.getProperty("maxRouge", "20")));
+        sliderTousRouge.setMaximum(Integer.parseInt(prop.getProperty("minTousRouge", "10")));
     }
 
     private void setMinimum() {
@@ -544,6 +567,7 @@ public class ClientAdm extends javax.swing.JFrame {
         PEOVert.setMinimum(Integer.parseInt(prop.getProperty("minVert", "3")));
         PEOOrange.setMinimum(Integer.parseInt(prop.getProperty("minOrange", "1")));
         PEORouge.setMinimum(Integer.parseInt(prop.getProperty("minRouge", "5")));
+        sliderTousRouge.setMinimum(Integer.parseInt(prop.getProperty("maxTousRouge", "1")));
     }
 
     private void setCurrentValues() {
@@ -559,6 +583,7 @@ public class ClientAdm extends javax.swing.JFrame {
         PEOVert.setValue(Integer.parseInt(prop.getProperty("PietonVert_EO", "3")));
         PEOOrange.setValue(Integer.parseInt(prop.getProperty("PietonOrange_EO", "1")));
         PEORouge.setValue(Integer.parseInt(prop.getProperty("PietonRouge_EO", "5")));
+        sliderTousRouge.setMaximum(Integer.parseInt(prop.getProperty("TousRouge", "1")));
     }
 
     private void initSliders() {
@@ -589,5 +614,16 @@ public class ClientAdm extends javax.swing.JFrame {
         feu.setRouge(VNSRouge.getValue());
         
         model.setTousRouge(sliderTousRouge.getValue());        
+    }
+
+    private boolean valide() {
+        return true;
+    }
+
+    public void notifieTousRouge() throws RemoteException {
+        model=new FeuModel(1);
+        setValuesModel();
+        model.demarrer();
+        serveur.setModel(model);
     }
 }

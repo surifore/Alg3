@@ -4,23 +4,24 @@
  */
 package be.esi.g34754.alg3.carrefour;
 
+import java.io.Serializable;
 import java.util.TimerTask;
 
 /**
  *
  * @author g34754
  */
-public class CarrefourTask extends TimerTask {
+public class CarrefourTask extends TimerTask implements Serializable{
 
     private Etat etat;
     private int[] restant;
     private FeuModeleInterface model;
-    private short stop;
+    protected boolean arret;
 
     public CarrefourTask(Etat etat, FeuModeleInterface model) {
         this.model = model;
         this.etat = etat;
-        this.stop = 0;
+        this.arret = false;
         etat.setFeuxP_NS(new EtatFeu(CouleurEnum.ROUGE, false));
         etat.setFeuxV_NS(new EtatFeu(CouleurEnum.VERT, false));
         etat.setFeuxP_EO(new EtatFeu(CouleurEnum.VERT, false));
@@ -35,18 +36,32 @@ public class CarrefourTask extends TimerTask {
     //TODO vérifier que pas erreur dans carrefour avant de faire fire et si incorrect met tt en panne
     @Override
     public void run() {
-        restant[0] = mAJ(etat.getFeuxP_NS(), restant[0]);
-        restant[1] = mAJ(etat.getFeuxP_EO(), restant[1]);
-        restant[2] = mAJ(etat.getFeuxV_NS(), restant[2]);
-        restant[3] = mAJ(etat.getFeuxV_EO(), restant[3]);
-        model.notifierChangement();
-        if ((etat.getFeuxP_NS().isStop()&&etat.getFeuxP_NS().etat.getCouleur().equals(CouleurEnum.ROUGE))&&
-            (etat.getFeuxV_NS().isStop()&&etat.getFeuxV_NS().etat.getCouleur().equals(CouleurEnum.ROUGE))&&
-            (etat.getFeuxP_EO().isStop()&&etat.getFeuxP_EO().etat.getCouleur().equals(CouleurEnum.ROUGE))&&
-            (etat.getFeuxV_EO().isStop()&&etat.getFeuxV_EO().etat.getCouleur().equals(CouleurEnum.ROUGE))) {
-            
-            model.setEnPanne();
+        if ((etat.getFeuxP_NS().isStop() && etat.getFeuxP_NS().etat.getCouleur().equals(CouleurEnum.ROUGE))
+                && (etat.getFeuxV_NS().isStop() && etat.getFeuxV_NS().etat.getCouleur().equals(CouleurEnum.ROUGE))
+                && (etat.getFeuxP_EO().isStop() && etat.getFeuxP_EO().etat.getCouleur().equals(CouleurEnum.ROUGE))
+                && (etat.getFeuxV_EO().isStop() && etat.getFeuxV_EO().etat.getCouleur().equals(CouleurEnum.ROUGE))) {
+            System.out.println("TousRouge");
+            if (!isArret()) {
+                System.out.println("En panne");
+                model.setEnPanne();
+            }else{
+                System.out.println("signal ok");
+                model.refresh();
+                arret=false;
+                etat.getFeuxP_EO().setStop(false);
+                etat.getFeuxV_EO().setStop(false);
+                etat.getFeuxP_NS().setStop(false);
+                etat.getFeuxV_NS().setStop(false);
+            }
+        } else {
+            restant[0] = mAJ(etat.getFeuxP_NS(), restant[0]);
+            restant[1] = mAJ(etat.getFeuxP_EO(), restant[1]);
+            restant[2] = mAJ(etat.getFeuxV_NS(), restant[2]);
+            restant[3] = mAJ(etat.getFeuxV_EO(), restant[3]);
+            model.notifierChangement();
         }
+        if(arret)
+        System.out.println("arret en cours");
         System.out.println(etat);
     }
 
@@ -70,5 +85,19 @@ public class CarrefourTask extends TimerTask {
             }
         }
         return restant;
+    }
+
+    /**
+     * @return the arret
+     */
+    public boolean isArret() {
+        return arret;
+    }
+
+    /**
+     * @param arret the arret to set
+     */
+    public void setArret(boolean arret) {
+        this.arret = arret;
     }
 }

@@ -34,4 +34,10 @@ public interface FeuModeleInterface {
     public int getVitesse();
 
     public void demarrer();
-    }
+
+    public void refresh();
+
+    public void setStop();
+
+    public void setArret();
+}

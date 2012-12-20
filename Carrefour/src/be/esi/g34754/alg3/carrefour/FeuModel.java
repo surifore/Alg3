@@ -21,6 +21,7 @@ public class FeuModel implements FeuModeleInterface, Serializable {
     private List<CarrefourView> vues;
     private Etat etat;
     private TimerCarrefour demarrage;
+    private CarrefourTask tache;
     protected int vitesse;
 
     public FeuModel(int vitesse) {
@@ -73,6 +74,7 @@ public class FeuModel implements FeuModeleInterface, Serializable {
         }
     }
 
+    @Override
     public void setStop() {
         etat.getFeuxP_EO().setStop(true);
         etat.getFeuxV_EO().setStop(true);
@@ -99,10 +101,30 @@ public class FeuModel implements FeuModeleInterface, Serializable {
 
     @Override
     public final void demarrer() {
-        demarrage.schedule(new CarrefourTask(etat, this), 0, 1000/vitesse);
+        tache=new CarrefourTask(etat, this);
+        demarrage.schedule(tache, 0, 1000/vitesse);
     }
 
     public void setTousRouge(int value) {
         etat.setTousRouge(value);
+    }
+
+    @Override
+    public void setArret() {
+        tache.setArret(true);
+        setStop();
+    }
+
+    @Override
+    public void refresh() {
+        for (CarrefourView vue : vues) {
+            try {
+                vue.notifieTousRouge();
+            } catch (RemoteException ex) {
+                JOptionPane.showMessageDialog(new JFrame(),
+                        "Erreur lors de la communication avec le serveur",
+                        "RemoteException", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 }

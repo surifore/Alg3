@@ -17,4 +17,8 @@ public interface CarrefourServeurInterface extends Remote{
     public void addListener(CarrefourView client)throws RemoteException;
 
     public FeuModeleInterface getModel()throws RemoteException;
+
+    public void setModel(FeuModeleInterface model)throws RemoteException;
+
+    public void setArret()throws RemoteException;
 }

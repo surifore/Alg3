@@ -23,4 +23,8 @@ public class FeuVoitureImpl extends UnicastRemoteObject implements CarrefourView
     public void notifieChangement() throws RemoteException {
         parent.initLed();
     }
+
+    @Override
+    public void notifieTousRouge() throws RemoteException {        
+    }
 }
