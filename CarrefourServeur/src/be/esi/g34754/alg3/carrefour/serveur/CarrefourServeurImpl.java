@@ -21,19 +21,17 @@ class CarrefourServeurImpl extends UnicastRemoteObject implements CarrefourServe
     
     private FeuModel feux;
     private List<CarrefourView> clients;
-    private List<CarrefourView> clientsSave;
 
     public CarrefourServeurImpl() throws RemoteException{
         feux=new FeuModel(5,2,8,1);
         clients=new ArrayList<CarrefourView>();
-        clientsSave=new ArrayList<CarrefourView>();
         feux.addCarrefourListener(this);
+        feux.demarrer();
     }
 
     @Override
     public void addListener(CarrefourView client) throws RemoteException{
         clients.add(client);
-        clientsSave.add(client);
         feux.addCarrefourListener(this);
     }
 
@@ -44,7 +42,9 @@ class CarrefourServeurImpl extends UnicastRemoteObject implements CarrefourServe
     
     @Override
     public void notifieChangement(){
-        for(CarrefourView client:clientsSave){
+        List<CarrefourView> clientCopy=new ArrayList<CarrefourView>();
+        clientCopy.addAll(clients);
+        for(CarrefourView client:clientCopy){
             try {
                 client.notifieChangement();
             } catch (RemoteException ex) {

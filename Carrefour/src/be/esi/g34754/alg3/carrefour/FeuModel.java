@@ -28,7 +28,6 @@ public class FeuModel implements FeuModeleInterface, Serializable {
         vues = new ArrayList<CarrefourView>();
         demarrage = new TimerCarrefour();
         this.vitesse=vitesse;
-        demarrage.schedule(new CarrefourTask(etat, this), 0, 1000/vitesse);
     }
 
     public FeuModel(int vert, int orange, int rouge,int vitesse) {
@@ -37,7 +36,6 @@ public class FeuModel implements FeuModeleInterface, Serializable {
         vues = new ArrayList<CarrefourView>();
         demarrage = new TimerCarrefour();
         this.vitesse=vitesse;
-        demarrage.schedule(new CarrefourTask(etat, this), 0, 1000/vitesse);
     }
 
     @Override
@@ -94,7 +92,17 @@ public class FeuModel implements FeuModeleInterface, Serializable {
     /**
      * @return the vitesse
      */
+    @Override
     public int getVitesse() {
         return vitesse;
+    }
+
+    @Override
+    public final void demarrer() {
+        demarrage.schedule(new CarrefourTask(etat, this), 0, 1000/vitesse);
+    }
+
+    public void setTousRouge(int value) {
+        etat.setTousRouge(value);
     }
 }

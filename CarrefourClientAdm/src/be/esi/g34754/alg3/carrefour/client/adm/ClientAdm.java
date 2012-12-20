@@ -461,6 +461,7 @@ public class ClientAdm extends javax.swing.JFrame {
         feuP_NS.setModel(model);
         feuV_EO.setModel(model);
         feuV_NS.setModel(model);
+        model.demarrer();
     }//GEN-LAST:event_visualiserActionPerformed
 
     private void appliquerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_appliquerActionPerformed
@@ -469,7 +470,7 @@ public class ClientAdm extends javax.swing.JFrame {
     }//GEN-LAST:event_appliquerActionPerformed
 
     private void annulerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_annulerActionPerformed
-        setCurrentValues(prop);
+        setCurrentValues();
     }//GEN-LAST:event_annulerActionPerformed
 
     private void fermerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fermerActionPerformed
@@ -515,7 +516,7 @@ public class ClientAdm extends javax.swing.JFrame {
     private javax.swing.JSlider vitesse;
     // End of variables declaration//GEN-END:variables
 
-    private void setMaximum(Properties prop) {
+    private void setMaximum() {
         VNSVert.setMaximum(Integer.parseInt(prop.getProperty("maxVert", "15")));
         VNSOrange.setMaximum(Integer.parseInt(prop.getProperty("maxOrange", "10")));
         VNSRouge.setMaximum(Integer.parseInt(prop.getProperty("maxRouge", "20")));
@@ -530,7 +531,7 @@ public class ClientAdm extends javax.swing.JFrame {
         PEORouge.setMaximum(Integer.parseInt(prop.getProperty("maxRouge", "20")));
     }
 
-    private void setMinimum(Properties prop) {
+    private void setMinimum() {
         VNSVert.setMinimum(Integer.parseInt(prop.getProperty("minVert", "3")));
         VNSOrange.setMinimum(Integer.parseInt(prop.getProperty("minOrange", "1")));
         VNSRouge.setMinimum(Integer.parseInt(prop.getProperty("minRouge", "5")));
@@ -545,7 +546,7 @@ public class ClientAdm extends javax.swing.JFrame {
         PEORouge.setMinimum(Integer.parseInt(prop.getProperty("minRouge", "5")));
     }
 
-    private void setCurrentValues(Properties prop) {
+    private void setCurrentValues() {
         VNSVert.setValue(Integer.parseInt(prop.getProperty("VoitureVert_NS", "3")));
         VNSOrange.setValue(Integer.parseInt(prop.getProperty("VoitureOrange_NS", "1")));
         VNSRouge.setValue(Integer.parseInt(prop.getProperty("VoitureRouge_NS", "5")));
@@ -561,9 +562,9 @@ public class ClientAdm extends javax.swing.JFrame {
     }
 
     private void initSliders() {
-        setMaximum(prop);
-        setMinimum(prop);
-        setCurrentValues(prop);
+        setMaximum();
+        setMinimum();
+        setCurrentValues();
     }
 
     private void setValuesModel() {
@@ -571,19 +572,22 @@ public class ClientAdm extends javax.swing.JFrame {
         feu.setVert(PEOVert.getValue());
         feu.setOrange(PEOOrange.getValue());
         feu.setRouge(PEORouge.getValue());
+        
         feu=model.getEtat().getFeuxV_EO();
         feu.setVert(VEOVert.getValue());
         feu.setOrange(VEOOrange.getValue());
         feu.setRouge(VEORouge.getValue());
+        
         feu=model.getEtat().getFeuxP_NS();
         feu.setVert(PNSVert.getValue());
         feu.setOrange(PNSOrange.getValue());
         feu.setRouge(PNSRouge.getValue());
+        
         feu=model.getEtat().getFeuxV_NS();
         feu.setVert(VNSVert.getValue());
         feu.setOrange(VNSOrange.getValue());
         feu.setRouge(VNSRouge.getValue());
         
-        feu.setTousRouge(sliderTousRouge.getValue());        
+        model.setTousRouge(sliderTousRouge.getValue());        
     }
 }
