@@ -18,7 +18,7 @@ public class CarrefourTask extends TimerTask implements Serializable{
     private FeuModeleInterface model;
     protected boolean arret;
 
-    public CarrefourTask(Etat etat, FeuModel model) {
+    public CarrefourTask(Etat etat, FeuModeleInterface model) {
         this.model = model;
         this.etat = etat;
         this.arret = false;
@@ -40,12 +40,13 @@ public class CarrefourTask extends TimerTask implements Serializable{
                 && (etat.getFeuxV_NS().isStop() && etat.getFeuxV_NS().etat.getCouleur().equals(CouleurEnum.ROUGE))
                 && (etat.getFeuxP_EO().isStop() && etat.getFeuxP_EO().etat.getCouleur().equals(CouleurEnum.ROUGE))
                 && (etat.getFeuxV_EO().isStop() && etat.getFeuxV_EO().etat.getCouleur().equals(CouleurEnum.ROUGE))) {
-            System.out.println("TousRouge");
+            System.out.println("Attention TousRouge");
             if (!isArret()) {
-                System.out.println("En panne");
+                System.out.println("Attention En panne");
                 model.setEnPanne();
+                arret=false;
             }else{
-                System.out.println("signal ok");
+                System.out.println("Attention signal ok");
                 model.refresh();
                 arret=false;
                 etat.getFeuxP_EO().setStop(false);
@@ -60,8 +61,6 @@ public class CarrefourTask extends TimerTask implements Serializable{
             restant[3] = mAJ(etat.getFeuxV_EO(), restant[3]);
             model.notifierChangement();
         }
-        if(arret)
-        System.out.println("arret en cours");
         System.out.println(etat);
     }
 
@@ -82,6 +81,12 @@ public class CarrefourTask extends TimerTask implements Serializable{
                     }
                     restant--;
                 }
+            }
+        }else{
+            if (!(feu.etat.getCouleur().equals(CouleurEnum.ORANGE)||(feu.etat.getCouleur().equals(CouleurEnum.VERT)&&feu.etat.isClignotant()))) {
+                System.out.println("Attention met à l'orange");
+            }else{
+                System.out.println("c'est à l'orange");
             }
         }
         return restant;

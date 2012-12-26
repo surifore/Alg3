@@ -6,7 +6,6 @@ package be.esi.g34754.alg3.carrefour.client.feu.pieton;
 
 import be.esi.g34754.alg3.carrefour.interfaces.CarrefourServeurInterface;
 import be.esi.g34754.rmioutils.Connection;
-import java.awt.FlowLayout;
 
 /**
  *

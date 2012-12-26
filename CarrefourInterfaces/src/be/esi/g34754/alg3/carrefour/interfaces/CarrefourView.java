@@ -16,5 +16,7 @@ public interface CarrefourView extends Remote{
     public void notifieChangement()throws RemoteException;
 
     public void notifieTousRouge()throws RemoteException;
+
+    public boolean isFeu()throws RemoteException;
     
 }

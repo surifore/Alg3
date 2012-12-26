@@ -16,7 +16,7 @@ import javax.swing.JOptionPane;
  *
  * @author g34754
  */
-public class FeuModel implements Serializable {
+public class FeuModel implements FeuModeleInterface,Serializable {
 
     private List<CarrefourView> vues;
     private Etat etat;
@@ -39,33 +39,37 @@ public class FeuModel implements Serializable {
         this.vitesse=vitesse;
     }
 
+    @Override
     public Etat getEtat() {
         demarrage = new TimerCarrefour();
         return new Etat(etat.getFeuxP_NS(), etat.getFeuxP_EO(), etat.getFeuxV_NS(), etat.getFeuxV_EO());
     }
 
+    @Override
     public void addCarrefourListener(CarrefourView add) {
         vues.add(add);
         fire();
     }
 
+    @Override
     public void removeCarrefourListener(CarrefourView add) {
         vues.remove(add);
         fire();
     }
 
+    @Override
     public void notifierChangement() {
         fire();
     }
 
     private void fire() {
-        for (CarrefourView vue : vues) {
+        List<CarrefourView> clientCopy = new ArrayList<CarrefourView>();
+        clientCopy.addAll(vues);
+        for (CarrefourView vue : clientCopy) {
             try {
                 vue.notifieChangement();
             } catch (RemoteException ex) {
-                JOptionPane.showMessageDialog(new JFrame(),
-                        "Erreur lors de la communication avec le serveur",
-                        "RemoteException", JOptionPane.ERROR_MESSAGE);
+                vues.remove(vue);
             }
         }
     }
@@ -78,6 +82,7 @@ public class FeuModel implements Serializable {
         etat.getFeuxV_NS().setStop(true);
     }
 
+    @Override
     public void setEnPanne() {
         etat.getFeuxP_EO().setEnPanne(true);
         etat.getFeuxV_EO().setEnPanne(true);

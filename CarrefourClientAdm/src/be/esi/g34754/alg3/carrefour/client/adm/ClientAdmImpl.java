@@ -27,4 +27,9 @@ public class ClientAdmImpl extends UnicastRemoteObject implements CarrefourView{
     public void notifieTousRouge() throws RemoteException {
         parent.notifieTousRouge();
     }
+
+    @Override
+    public boolean isFeu() throws RemoteException {
+        return false;
+    }
 }

@@ -22,7 +22,7 @@ public class FeuPieton extends Feu implements Serializable{
         tousRouge=1;
     }
 
-    public FeuPieton( int vert, int clignottement,int rouge,int tousRouge) {
+    public FeuPieton( int vert, int orange,int rouge,int tousRouge) {
         this.rouge = rouge;
         this.vert = vert;
         this.orange = orange;

@@ -6,7 +6,6 @@ package be.esi.g34754.alg3.carrefour.serveur;
 
 import be.esi.g34754.alg3.carrefour.FeuModel;
 import be.esi.g34754.alg3.carrefour.FeuModeleInterface;
-import be.esi.g34754.alg3.carrefour.client.adm.ClientAdm;
 import be.esi.g34754.alg3.carrefour.interfaces.CarrefourServeurInterface;
 import be.esi.g34754.alg3.carrefour.interfaces.CarrefourView;
 import java.rmi.RemoteException;
@@ -49,9 +48,13 @@ class CarrefourServeurImpl extends UnicastRemoteObject implements CarrefourServe
             try {
                 client.notifieChangement();
             } catch (RemoteException ex) {
-                if (!(client instanceof ClientAdm)) {
+                try {
+                    System.out.println("Attention "+client.isFeu() );
+                    if ((client.isFeu())) {
+                        feux.setStop();
+                    }
                     clients.remove(client);
-                    feux.setStop();
+                } catch (RemoteException ex1) {
                 }
             }
         }
@@ -81,5 +84,10 @@ class CarrefourServeurImpl extends UnicastRemoteObject implements CarrefourServe
     @Override
     public void setArret() throws RemoteException {
         feux.setArret();
+    }
+
+    @Override
+    public boolean isFeu() throws RemoteException {
+        return false;
     }
 }
