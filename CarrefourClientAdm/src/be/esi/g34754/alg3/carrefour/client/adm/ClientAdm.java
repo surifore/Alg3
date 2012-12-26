@@ -4,14 +4,19 @@
  */
 package be.esi.g34754.alg3.carrefour.client.adm;
 
-import be.esi.g34754.alg3.carrefour.CarrefourDto;
+import be.esi.g34754.alg3.carrefour.Feu;
 import be.esi.g34754.alg3.carrefour.FeuModel;
 import be.esi.g34754.alg3.carrefour.client.feu.pieton.FeuPieton;
 import be.esi.g34754.alg3.carrefour.client.feu.voiture.FeuVoiture;
 import be.esi.g34754.alg3.carrefour.interfaces.CarrefourServeurInterface;
+import be.esi.g34754.alg3.carrefour.interfaces.CarrefourView;
+import be.esi.g34754.rmioutils.Connection;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -20,8 +25,13 @@ import java.util.Properties;
 public class ClientAdm extends javax.swing.JFrame {
 
     private FeuModel model;
-    private Properties prop;
     private CarrefourServeurInterface serveur;
+    private CarrefourView client;
+    private Properties prop;
+    private FeuPieton feuP_NS;
+    private FeuPieton feuP_EO;
+    private FeuVoiture feuV_NS;
+    private FeuVoiture feuV_EO;
 
     /**
      * Creates new form ClientAdm
@@ -34,11 +44,24 @@ public class ClientAdm extends javax.swing.JFrame {
             prop.load(new FileInputStream("src/be/esi/g34754/alg3/carrefour/client/adm/dureeFeux.properties"));
         } catch (IOException ex) {
         }
+        this.serveur=serveur;
+        try {
+            this.client=new ClientAdmImpl(this);
+            serveur.addListener(client);
+        } catch (RemoteException ex) {
+            Logger.getLogger(ClientAdm.class.getName()).log(Level.SEVERE, null, ex);
+        }
         initSliders();
-        axeNS.add(new FeuPieton(serveur,true));
-        axeNS.add(new FeuVoiture(serveur,true));
-        axeEO.add(new FeuPieton(serveur,true));
-        axeEO.add(new FeuVoiture(serveur,true));
+        feuP_EO=new FeuPieton();
+        feuP_EO.setAxeNS(false);
+        feuP_NS=new FeuPieton();
+        feuV_EO=new FeuVoiture();
+        feuV_EO.setAxeNS(false);
+        feuV_NS=new FeuVoiture();
+        axeNS.add(feuV_NS);
+        axeNS.add(feuP_NS);
+        axeEO.add(feuV_EO);
+        axeEO.add(feuP_EO);
     }
 
     /**
@@ -74,17 +97,20 @@ public class ClientAdm extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         axeNS = new javax.swing.JPanel();
         axeEO = new javax.swing.JPanel();
-        vitesseVisu = new javax.swing.JSlider();
+        vitesse = new javax.swing.JSlider();
         jLabel5 = new javax.swing.JLabel();
         fermer = new javax.swing.JButton();
+        sliderTousRouge = new javax.swing.JSlider();
+        jLabel6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Administration du carrefour");
-        setMaximumSize(new java.awt.Dimension(786, 673));
-        setMinimumSize(new java.awt.Dimension(786, 673));
+        setMaximumSize(new java.awt.Dimension(786, 779));
+        setMinimumSize(new java.awt.Dimension(786, 779));
+        setPreferredSize(new java.awt.Dimension(825, 825));
         setResizable(false);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Feux Voitures", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, new java.awt.Color(0, 0, 51)));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Feux Voitures", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(0, 0, 51))); // NOI18N
 
         VNSRouge.setBackground(new java.awt.Color(255, 0, 51));
         VNSRouge.setMajorTickSpacing(2);
@@ -191,7 +217,7 @@ public class ClientAdm extends javax.swing.JFrame {
                 .addGap(0, 11, Short.MAX_VALUE))
         );
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Feux Pietons", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, new java.awt.Color(0, 0, 51)));
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Feux Pietons", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(0, 0, 51))); // NOI18N
 
         PNSRouge.setBackground(new java.awt.Color(255, 0, 51));
         PNSRouge.setMajorTickSpacing(2);
@@ -323,7 +349,7 @@ public class ClientAdm extends javax.swing.JFrame {
             }
         });
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Prévisualisation", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, new java.awt.Color(0, 0, 0)));
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Prévisualisation", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(0, 0, 0))); // NOI18N
 
         axeNS.setBorder(javax.swing.BorderFactory.createTitledBorder("Axe Nord - Sud"));
         axeNS.setLayout(new java.awt.GridLayout(1, 0));
@@ -347,19 +373,19 @@ public class ClientAdm extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(axeEO, javax.swing.GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE)
+                    .addComponent(axeEO, javax.swing.GroupLayout.DEFAULT_SIZE, 302, Short.MAX_VALUE)
                     .addComponent(axeNS, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
-        vitesseVisu.setMajorTickSpacing(1);
-        vitesseVisu.setMaximum(10);
-        vitesseVisu.setMinimum(1);
-        vitesseVisu.setPaintLabels(true);
-        vitesseVisu.setPaintTicks(true);
-        vitesseVisu.setSnapToTicks(true);
-        vitesseVisu.setToolTipText("");
-        vitesseVisu.setName(""); // NOI18N
+        vitesse.setMajorTickSpacing(1);
+        vitesse.setMaximum(10);
+        vitesse.setMinimum(1);
+        vitesse.setPaintLabels(true);
+        vitesse.setPaintTicks(true);
+        vitesse.setSnapToTicks(true);
+        vitesse.setToolTipText("");
+        vitesse.setName(""); // NOI18N
 
         jLabel5.setText("Vitesse de la visualisation:");
 
@@ -370,6 +396,17 @@ public class ClientAdm extends javax.swing.JFrame {
             }
         });
 
+        sliderTousRouge.setMajorTickSpacing(1);
+        sliderTousRouge.setMaximum(10);
+        sliderTousRouge.setMinimum(1);
+        sliderTousRouge.setMinorTickSpacing(1);
+        sliderTousRouge.setPaintLabels(true);
+        sliderTousRouge.setPaintTicks(true);
+        sliderTousRouge.setSnapToTicks(true);
+        sliderTousRouge.setValue(2);
+
+        jLabel6.setText("Durée où tous les feux sont à rouge:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -377,22 +414,30 @@ public class ClientAdm extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(vitesseVisu, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
-                        .addComponent(visualiser)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(annuler)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(appliquer)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(fermer)))
-                .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(jLabel6)
+                        .addGap(18, 18, 18)
+                        .addComponent(sliderTousRouge, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(vitesse, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(visualiser)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(annuler)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(appliquer)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(fermer)))
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -401,12 +446,19 @@ public class ClientAdm extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(sliderTousRouge, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addComponent(jLabel6)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(vitesseVisu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(vitesse, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(visualiser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(annuler, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(appliquer)
@@ -419,23 +471,27 @@ public class ClientAdm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void visualiserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_visualiserActionPerformed
-        model=new FeuModel();
-        model.setFeux(new CarrefourDto(PEOVert.getValue(), PEOOrange.getValue(), PEORouge.getValue(), 
-                VEOVert.getValue(), VEOOrange.getValue(), VEORouge.getValue(),
-                PNSVert.getValue(), PNSOrange.getValue(), PNSRouge.getValue(),
-                VNSVert.getValue(), VNSOrange.getValue(), VNSRouge.getValue()));
-        model.start(vitesseVisu.getValue());
-        pack();
+        model=new FeuModel(vitesse.getValue());
+        setValuesModel();
+        feuP_EO.setModel(model);
+        feuP_NS.setModel(model);
+        feuV_EO.setModel(model);
+        feuV_NS.setModel(model);
+        model.demarrer();
     }//GEN-LAST:event_visualiserActionPerformed
 
     private void appliquerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_appliquerActionPerformed
         if(valide()){
-            
+            try {
+                serveur.setArret();
+            } catch (RemoteException ex) {
+                Logger.getLogger(ClientAdm.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_appliquerActionPerformed
 
     private void annulerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_annulerActionPerformed
-        setCurrentValues(prop);
+        setCurrentValues();
     }//GEN-LAST:event_annulerActionPerformed
 
     private void fermerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fermerActionPerformed
@@ -443,11 +499,13 @@ public class ClientAdm extends javax.swing.JFrame {
     }//GEN-LAST:event_fermerActionPerformed
 
     public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ClientAdm().setVisible(true);
-            }
-        });
+        Connection<CarrefourServeurInterface> conn = new Connection("Carrefour", "localhost", 1099);
+        conn.setVisible(true);
+        CarrefourServeurInterface model;
+        model = conn.getRemoteObject();
+        ClientAdm gui = new ClientAdm(model);
+        gui.setVisible(true);
+        gui.pack();
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSlider PEOOrange;
@@ -472,14 +530,16 @@ public class ClientAdm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JSlider sliderTousRouge;
     private javax.swing.JButton visualiser;
-    private javax.swing.JSlider vitesseVisu;
+    private javax.swing.JSlider vitesse;
     // End of variables declaration//GEN-END:variables
 
-    private void setMaximum(Properties prop) {
+    private void setMaximum() {
         VNSVert.setMaximum(Integer.parseInt(prop.getProperty("maxVert", "15")));
         VNSOrange.setMaximum(Integer.parseInt(prop.getProperty("maxOrange", "10")));
         VNSRouge.setMaximum(Integer.parseInt(prop.getProperty("maxRouge", "20")));
@@ -492,9 +552,10 @@ public class ClientAdm extends javax.swing.JFrame {
         PEOVert.setMaximum(Integer.parseInt(prop.getProperty("maxVert", "15")));
         PEOOrange.setMaximum(Integer.parseInt(prop.getProperty("maxOrange", "10")));
         PEORouge.setMaximum(Integer.parseInt(prop.getProperty("maxRouge", "20")));
+        sliderTousRouge.setMaximum(Integer.parseInt(prop.getProperty("minTousRouge", "10")));
     }
 
-    private void setMinimum(Properties prop) {
+    private void setMinimum() {
         VNSVert.setMinimum(Integer.parseInt(prop.getProperty("minVert", "3")));
         VNSOrange.setMinimum(Integer.parseInt(prop.getProperty("minOrange", "1")));
         VNSRouge.setMinimum(Integer.parseInt(prop.getProperty("minRouge", "5")));
@@ -507,9 +568,10 @@ public class ClientAdm extends javax.swing.JFrame {
         PEOVert.setMinimum(Integer.parseInt(prop.getProperty("minVert", "3")));
         PEOOrange.setMinimum(Integer.parseInt(prop.getProperty("minOrange", "1")));
         PEORouge.setMinimum(Integer.parseInt(prop.getProperty("minRouge", "5")));
+        sliderTousRouge.setMinimum(Integer.parseInt(prop.getProperty("maxTousRouge", "1")));
     }
 
-    private void setCurrentValues(Properties prop) {
+    private void setCurrentValues() {
         VNSVert.setValue(Integer.parseInt(prop.getProperty("VoitureVert_NS", "3")));
         VNSOrange.setValue(Integer.parseInt(prop.getProperty("VoitureOrange_NS", "1")));
         VNSRouge.setValue(Integer.parseInt(prop.getProperty("VoitureRouge_NS", "5")));
@@ -522,12 +584,48 @@ public class ClientAdm extends javax.swing.JFrame {
         PEOVert.setValue(Integer.parseInt(prop.getProperty("PietonVert_EO", "3")));
         PEOOrange.setValue(Integer.parseInt(prop.getProperty("PietonOrange_EO", "1")));
         PEORouge.setValue(Integer.parseInt(prop.getProperty("PietonRouge_EO", "5")));
+        sliderTousRouge.setMaximum(Integer.parseInt(prop.getProperty("TousRouge", "1")));
     }
 
     private void initSliders() {
-        setMaximum(prop);
-        setMinimum(prop);
-        setCurrentValues(prop);
+        setMaximum();
+        setMinimum();
+        setCurrentValues();
+    }
+
+    private void setValuesModel() {
+        Feu feu=model.getEtat().getFeuxP_EO();
+        feu.setVert(PEOVert.getValue());
+        feu.setOrange(PEOOrange.getValue());
+        feu.setRouge(PEORouge.getValue());
+        
+        feu=model.getEtat().getFeuxV_EO();
+        feu.setVert(VEOVert.getValue());
+        feu.setOrange(VEOOrange.getValue());
+        feu.setRouge(VEORouge.getValue());
+        
+        feu=model.getEtat().getFeuxP_NS();
+        feu.setVert(PNSVert.getValue());
+        feu.setOrange(PNSOrange.getValue());
+        feu.setRouge(PNSRouge.getValue());
+        
+        feu=model.getEtat().getFeuxV_NS();
+        feu.setVert(VNSVert.getValue());
+        feu.setOrange(VNSOrange.getValue());
+        feu.setRouge(VNSRouge.getValue());
+        
+        model.setTousRouge(sliderTousRouge.getValue());        
+    }
+
+    private boolean valide() {
+        return true;
+    }
+
+    public void notifieTousRouge() throws RemoteException {
+        model=new FeuModel(1);
+        setValuesModel();
+        model.demarrer();
+        serveur.setModel(model);
     }
 
     private boolean valide() {

@@ -4,14 +4,11 @@
  */
 package be.esi.g34754.alg3.carrefour;
 
-import be.esi.g34754.alg3.carrefour.interfaces.CarrefourServeurInterface;
 import be.esi.g34754.alg3.carrefour.interfaces.CarrefourView;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -24,19 +21,22 @@ public class FeuModel implements Serializable {
     private List<CarrefourView> vues;
     private Etat etat;
     private TimerCarrefour demarrage;
+    private CarrefourTask tache;
+    protected int vitesse;
 
-    public FeuModel() {
+    public FeuModel(int vitesse) {
         etat = new Etat();
         vues = new ArrayList<CarrefourView>();
         demarrage = new TimerCarrefour();
+        this.vitesse=vitesse;
     }
 
-    public FeuModel(int vert, int orange, int rouge) {
-        etat = new Etat(new FeuPieton(vert, orange, rouge), new FeuPieton(vert, orange, rouge),
-                new FeuVoiture(vert, orange, rouge), new FeuVoiture(vert, orange, rouge));
+    public FeuModel(int vert, int orange, int rouge,int vitesse) {
+        etat = new Etat(new FeuPieton(vert, orange, rouge,1), new FeuPieton(vert, orange, rouge,1),
+                new FeuVoiture(vert, orange, rouge,1), new FeuVoiture(vert, orange, rouge,1));
         vues = new ArrayList<CarrefourView>();
         demarrage = new TimerCarrefour();
-        demarrage.schedule(new CarrefourTask(etat, this), 0, 1000);
+        this.vitesse=vitesse;
     }
 
     public Etat getEtat() {
@@ -70,6 +70,7 @@ public class FeuModel implements Serializable {
         }
     }
 
+    @Override
     public void setStop() {
         etat.getFeuxP_EO().setStop(true);
         etat.getFeuxV_EO().setStop(true);
@@ -85,14 +86,40 @@ public class FeuModel implements Serializable {
         fire();
     }
 
-    public void setFeux(CarrefourDto c) {
-        etat.getFeuxP_EO().setFeux(c.getpEOVert(),c.getpEOOrange(),c.getpEORouge());
-        etat.getFeuxV_EO().setFeux(c.getvEOVert(),c.getvEOOrange(),c.getvEORouge());
-        etat.getFeuxP_NS().setFeux(c.getpNSVert(),c.getpNSOrange(),c.getpNSRouge());
-        etat.getFeuxV_NS().setFeux(c.getvNSVert(),c.getvNSOrange(),c.getvNSRouge());
+    /**
+     * @return the vitesse
+     */
+    @Override
+    public int getVitesse() {
+        return vitesse;
     }
 
-    public void start(int value) {
-        demarrage.schedule(new CarrefourTask(etat, this), 0, value*1000);
+    @Override
+    public final void demarrer() {
+        tache=new CarrefourTask(etat, this);
+        demarrage.schedule(tache, 0, 1000/vitesse);
+    }
+
+    public void setTousRouge(int value) {
+        etat.setTousRouge(value);
+    }
+
+    @Override
+    public void setArret() {
+        tache.setArret(true);
+        setStop();
+    }
+
+    @Override
+    public void refresh() {
+        for (CarrefourView vue : vues) {
+            try {
+                vue.notifieTousRouge();
+            } catch (RemoteException ex) {
+                JOptionPane.showMessageDialog(new JFrame(),
+                        "Erreur lors de la communication avec le serveur",
+                        "RemoteException", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 }

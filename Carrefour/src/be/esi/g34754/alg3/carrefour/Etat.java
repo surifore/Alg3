@@ -102,4 +102,11 @@ public class Etat implements Serializable{
         return str;
     }
 
+    void setTousRouge(int value) {
+        this.feuxP_NS.setTousRouge(value);
+        this.feuxP_EO.setTousRouge(value);
+        this.feuxV_NS.setTousRouge(value);
+        this.feuxV_EO.setTousRouge(value);
+    }
+
 }

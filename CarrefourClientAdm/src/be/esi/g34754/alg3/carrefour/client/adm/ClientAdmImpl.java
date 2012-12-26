@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package be.esi.g34754.alg3.carrefour.client.feu.pieton;
+package be.esi.g34754.alg3.carrefour.client.adm;
 
 import be.esi.g34754.alg3.carrefour.interfaces.CarrefourView;
 import java.rmi.RemoteException;
@@ -10,22 +10,21 @@ import java.rmi.server.UnicastRemoteObject;
 
 /**
  *
- * @author Florian
+ * @author g34754
  */
-class FeuPietonImpl extends UnicastRemoteObject implements CarrefourView {
-    private FeuPieton parent;
+public class ClientAdmImpl extends UnicastRemoteObject implements CarrefourView{
+    private ClientAdm parent;
 
-    public FeuPietonImpl(FeuPieton aThis) throws RemoteException{
+    public ClientAdmImpl(ClientAdm aThis) throws RemoteException{
         this.parent=aThis;
     }
 
     @Override
     public void notifieChangement() throws RemoteException {
-        parent.initLed();
     }
 
     @Override
     public void notifieTousRouge() throws RemoteException {
+        parent.notifieTousRouge();
     }
-    
 }

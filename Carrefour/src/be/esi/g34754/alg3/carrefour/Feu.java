@@ -15,6 +15,7 @@ public abstract class Feu implements Serializable {
     protected int rouge;
     protected int vert;
     protected int orange;
+    protected int tousRouge;
     protected boolean enPanne;
     protected boolean pieton;
     protected EtatFeu etat;
@@ -31,7 +32,7 @@ public abstract class Feu implements Serializable {
                 if (isPieton()&&etat.isClignotant()) {
                     etat.setClignotant(false);
                     etat.setCouleur(CouleurEnum.ROUGE);
-                    restant=getRouge();
+                    restant=getRouge()+getTousRouge();
                 }else if(isPieton()){
                     etat.setClignotant(true);
                     restant=getOrange();
@@ -41,7 +42,7 @@ public abstract class Feu implements Serializable {
                 }break;
             case ORANGE:
                 etat.setCouleur(CouleurEnum.ROUGE);
-                restant=getRouge();
+                restant=getRouge()+getTousRouge();
         }
         return restant;
     }
@@ -147,6 +148,20 @@ public abstract class Feu implements Serializable {
 
     public void setStop(boolean stop) {
         this.stop = stop;
+    }
+
+    /**
+     * @return the tousRouge
+     */
+    public int getTousRouge() {
+        return tousRouge;
+    }
+
+    /**
+     * @param tousRouge the tousRouge to set
+     */
+    public void setTousRouge(int tousRouge) {
+        this.tousRouge = tousRouge;
     }
 
 }

@@ -5,6 +5,7 @@
 package be.esi.g34754.alg3.carrefour.client.feu.voiture;
 
 import be.esi.g34754.alg3.carrefour.CouleurEnum;
+import be.esi.g34754.alg3.carrefour.FeuModeleInterface;
 import be.esi.g34754.alg3.carrefour.interfaces.CarrefourServeurInterface;
 import be.esi.g34754.alg3.carrefour.interfaces.CarrefourView;
 import java.awt.Color;
@@ -20,6 +21,7 @@ import java.util.logging.Logger;
 public class FeuVoiture extends javax.swing.JPanel implements Serializable {
 
     private CarrefourServeurInterface serveur;
+    private FeuModeleInterface model;
     private CarrefourView client;
     private boolean axeNS;
 
@@ -27,6 +29,9 @@ public class FeuVoiture extends javax.swing.JPanel implements Serializable {
      * Creates new form FeuPieto
      */
     public FeuVoiture(CarrefourServeurInterface serveur) {
+        if (serveur == null) {
+            throw new IllegalArgumentException("Le serveur doit avoir une valeur.");
+        }
         try {
             initComponents();
             this.serveur = serveur;
@@ -34,15 +39,50 @@ public class FeuVoiture extends javax.swing.JPanel implements Serializable {
             ledVert.setColor(Color.green);
             client = new FeuVoitureImpl(this);
             axeNS = true;
-            if (serveur != null) {
-                initLed();
-                serveur.addListener(client);
-            }
+            initLed();
+            serveur.addListener(client);
         } catch (RemoteException ex) {
             Logger.getLogger(FeuVoiture.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
+    /**
+     * Creates new form FeuPieto
+     */
+    public FeuVoiture(FeuModeleInterface model) {
+        try {
+            initComponents();
+            this.model = model;
+            this.serveur = null;
+            ledRouge.setColor(Color.red);
+            ledVert.setColor(Color.green);
+            client = new FeuVoitureImpl(this);
+            axeNS = true;
+            initLed();
+            model.addCarrefourListener(client);
+        } catch (RemoteException ex) {
+            Logger.getLogger(FeuVoiture.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public FeuVoiture(){
+        initComponents();
+        this.model = null;
+        ledRouge.setColor(Color.red);
+        ledVert.setColor(Color.green);
+        client = null;
+        axeNS = true;
+    }
+    
+    public void setModel(FeuModeleInterface model){
+        try {
+            this.model = model;
+            client = new FeuVoitureImpl(this);
+            model.addCarrefourListener(client);
+        } catch (RemoteException ex) {
+            Logger.getLogger(FeuVoiture.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     public void setAxeNS(boolean axeNS) {
         this.axeNS = axeNS;
     }
@@ -127,7 +167,7 @@ public class FeuVoiture extends javax.swing.JPanel implements Serializable {
     private be.esi.g34754.alg3.carrefour.outils.Led ledVert;
     // End of variables declaration//GEN-END:variables
 
-    public void initLed() {
+    public final void initLed() {
         if (serveur != null) {
             try {
                 if (axeNS) {
@@ -137,6 +177,12 @@ public class FeuVoiture extends javax.swing.JPanel implements Serializable {
                 }
             } catch (RemoteException ex) {
                 Logger.getLogger(FeuVoiture.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            if (axeNS) {
+                led(model.getEtat().getFeuxV_NS());
+            } else {
+                led(model.getEtat().getFeuxV_EO());
             }
         }
     }

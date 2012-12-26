@@ -20,15 +20,17 @@ public class FeuVoiture extends Feu implements Serializable{
         this.enPanne = false;
         etat=new EtatFeu(CouleurEnum.ROUGE, true);
         pieton=false;
+        this.tousRouge=1;
     }
 
-    public FeuVoiture(int vert, int orange, int rouge) {
+    public FeuVoiture(int vert, int orange, int rouge,int tousRouge) {
         this.rouge = rouge;
         this.orange = orange;
         this.vert = vert;
         this.enPanne = false;
         etat=new EtatFeu(CouleurEnum.ROUGE, true);
         pieton=false;
+        this.tousRouge=tousRouge;
     }
 
     void setFeux(int vert, int orange, int rouge) {
