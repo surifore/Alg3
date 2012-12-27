@@ -199,4 +199,13 @@ public class FeuPieton extends javax.swing.JPanel implements Serializable {
             }
         }
     }
+
+    public void removeFromModel() {
+        model.removeCarrefourListener(client);
+    }
+
+    public void clearLed() {
+        ledRouge.setOn(false);
+        ledVert.setOn(false);
+    }
 }

@@ -209,4 +209,14 @@ public class FeuVoiture extends javax.swing.JPanel implements Serializable {
             }
         }
     }
+    
+    public void removeFromModel() {
+        model.removeCarrefourListener(client);
+    }
+    
+    public void clearLed() {
+        ledRouge.setOn(false);
+        ledOrange.setOn(false);
+        ledVert.setOn(false);
+    }
 }

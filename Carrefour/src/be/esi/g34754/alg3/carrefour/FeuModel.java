@@ -127,4 +127,8 @@ public class FeuModel implements FeuModeleInterface,Serializable {
             }
         }
     }
+
+    public void arreter() {
+        demarrage.cancel();
+    }
 }
