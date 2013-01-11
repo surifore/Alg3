@@ -5,7 +5,7 @@
 package be.esi.g34754.alg3.carrefour.client.feu.pieton;
 
 import be.esi.g34754.alg3.carrefour.CouleurEnum;
-import be.esi.g34754.alg3.carrefour.FeuModeleInterface;
+import be.esi.g34754.alg3.carrefour.interfaces.FeuModeleInterface;
 import be.esi.g34754.alg3.carrefour.interfaces.CarrefourServeurInterface;
 import be.esi.g34754.alg3.carrefour.interfaces.CarrefourView;
 import java.awt.Color;
@@ -207,5 +207,10 @@ public class FeuPieton extends javax.swing.JPanel implements Serializable {
     public void clearLed() {
         ledRouge.setOn(false);
         ledVert.setOn(false);
+        ledVert.setClignotant(false);
+    }
+
+    void demandeVert() throws RemoteException {
+        serveur.demandeVert(axeNS);
     }
 }

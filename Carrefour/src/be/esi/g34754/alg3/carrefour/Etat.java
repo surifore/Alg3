@@ -115,9 +115,8 @@ public class Etat implements Serializable {
         int cycle = pNS.vert + pNS.orange + pNS.rouge;
         if (cycle != pEO.vert + pEO.orange + pEO.rouge
                 || cycle != vNS.vert + vNS.orange + vNS.rouge
-                || cycle != vEO.vert + vEO.orange + vEO.rouge) {
+                || cycle != vEO.vert + vEO.orange + vEO.rouge)
             throw new CarrefourException("La durée totale des feux doit être unique.");
-        }
         return cycle;
 
     }
@@ -129,22 +128,50 @@ public class Etat implements Serializable {
         for (int i = 0; i < 2; i++) {
             erreurExistante[i] = false;
         }
-        if ((pNS.etat.getCouleur().equals(CouleurEnum.VERT) || pNS.etat.getCouleur().equals(CouleurEnum.ORANGE)) && !vNS.etat.getCouleur().equals(CouleurEnum.ROUGE)) {
+        if ((pNS.etat.getCouleur().equals(CouleurEnum.VERT)) && !vNS.etat.getCouleur().equals(CouleurEnum.ROUGE))
             if (erreurExistante[0]) {
                 erreurs += "Problème sur l'axe NS: Les pietons et les voitures peuvent avancer en même temps\n";
                 erreur = true;
                 erreurExistante[0] = true;
             }
-        }
-        if ((pEO.etat.getCouleur().equals(CouleurEnum.VERT) || pEO.etat.getCouleur().equals(CouleurEnum.ORANGE)) && !vEO.etat.getCouleur().equals(CouleurEnum.ROUGE)) {
+        if ((vNS.etat.getCouleur().equals(CouleurEnum.VERT) || vNS.etat.getCouleur().equals(CouleurEnum.ORANGE)) && !pNS.etat.getCouleur().equals(CouleurEnum.ROUGE))
+            if (erreurExistante[0]) {
+                erreurs += "Problème sur l'axe NS: Les pietons et les voitures peuvent avancer en même temps\n";
+                erreur = true;
+                erreurExistante[0] = true;
+            }
+        if ((pEO.etat.getCouleur().equals(CouleurEnum.VERT)) && !vEO.etat.getCouleur().equals(CouleurEnum.ROUGE))
             if (erreurExistante[1]) {
                 erreurs += "Problème sur l'axe EO: Les pietons et les voitures peuvent avancer en même temps\n";
                 erreur = true;
                 erreurExistante[1] = true;
             }
-        }
-        if (erreur) {
+        if ((vEO.etat.getCouleur().equals(CouleurEnum.VERT) || vEO.etat.getCouleur().equals(CouleurEnum.ORANGE)) && !pEO.etat.getCouleur().equals(CouleurEnum.ROUGE))
+            if (erreurExistante[0]) {
+                erreurs += "Problème sur l'axe EO: Les pietons et les voitures peuvent avancer en même temps\n";
+                erreur = true;
+                erreurExistante[0] = true;
+            }
+        if ((vNS.etat.getCouleur().equals(CouleurEnum.VERT) || vNS.etat.getCouleur().equals(CouleurEnum.ORANGE)) && !vEO.etat.getCouleur().equals(CouleurEnum.ROUGE))
+            if (erreurExistante[0]) {
+                erreurs += "Problème sur l'axe NS: Les pietons et les voitures peuvent avancer en même temps\n";
+                erreur = true;
+                erreurExistante[0] = true;
+            }
+        if (erreur)
             throw new CarrefourException(erreurs);
-        }
+    }
+
+    public Feu getFeu(boolean voiture, boolean axeNS) {
+        if (voiture)
+            if (axeNS)
+                return vNS;
+            else
+                return vEO;
+        else
+            if (axeNS)
+                return pNS;
+            else
+                return pEO;
     }
 }

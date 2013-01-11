@@ -4,8 +4,9 @@
  */
 package be.esi.g34754.alg3.carrefour.serveur;
 
+import be.esi.g34754.alg3.carrefour.CouleurEnum;
 import be.esi.g34754.alg3.carrefour.FeuModel;
-import be.esi.g34754.alg3.carrefour.FeuModeleInterface;
+import be.esi.g34754.alg3.carrefour.interfaces.FeuModeleInterface;
 import be.esi.g34754.alg3.carrefour.interfaces.CarrefourServeurInterface;
 import be.esi.g34754.alg3.carrefour.interfaces.CarrefourView;
 import java.rmi.RemoteException;
@@ -17,7 +18,7 @@ import java.util.List;
  *
  * @author g34754
  */
-class CarrefourServeurImpl extends UnicastRemoteObject implements CarrefourServeurInterface, CarrefourView {
+public class CarrefourServeurImpl extends UnicastRemoteObject implements CarrefourServeurInterface, CarrefourView {
 
     private FeuModeleInterface feux;
     private List<CarrefourView> clients;
@@ -48,14 +49,8 @@ class CarrefourServeurImpl extends UnicastRemoteObject implements CarrefourServe
             try {
                 client.notifieChangement();
             } catch (RemoteException ex) {
-                try {
-                    System.out.println("Attention "+client.isFeu() );
-                    if ((client.isFeu())) {
-                        feux.setStop();
-                    }
-                    clients.remove(client);
-                } catch (RemoteException ex1) {
-                }
+                feux.setStop();
+                clients.remove(client);
             }
         }
     }
@@ -89,5 +84,16 @@ class CarrefourServeurImpl extends UnicastRemoteObject implements CarrefourServe
     @Override
     public boolean isFeu() throws RemoteException {
         return false;
+    }
+
+    @Override
+    public void removeListener(CarrefourView client) throws RemoteException {
+        clients.remove(client);
+    }
+
+    @Override
+    public void demandeVert(boolean axeNS) throws RemoteException {
+        if (feux.getEtat().getFeu(true, axeNS).getEtat().getCouleur().equals(CouleurEnum.VERT))
+            feux.demandeVert(axeNS);
     }
 }

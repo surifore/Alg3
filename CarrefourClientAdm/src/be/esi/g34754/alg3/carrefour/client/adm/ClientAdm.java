@@ -7,15 +7,18 @@ package be.esi.g34754.alg3.carrefour.client.adm;
 import be.esi.g34754.alg3.carrefour.CarrefourException;
 import be.esi.g34754.alg3.carrefour.CouleurEnum;
 import be.esi.g34754.alg3.carrefour.Etat;
-import be.esi.g34754.alg3.carrefour.EtatFeu;
 import be.esi.g34754.alg3.carrefour.Feu;
 import be.esi.g34754.alg3.carrefour.FeuModel;
 import be.esi.g34754.alg3.carrefour.client.feu.pieton.FeuPieton;
 import be.esi.g34754.alg3.carrefour.client.feu.voiture.FeuVoiture;
 import be.esi.g34754.alg3.carrefour.interfaces.CarrefourServeurInterface;
 import be.esi.g34754.alg3.carrefour.interfaces.CarrefourView;
+import be.esi.g34754.alg3.carrefour.interfaces.FeuModeleInterface;
 import be.esi.g34754.rmioutils.Connection;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.rmi.RemoteException;
@@ -30,8 +33,8 @@ import javax.swing.JOptionPane;
  */
 public class ClientAdm extends javax.swing.JFrame {
 
-    private FeuModel model;
-    private CarrefourServeurInterface serveur;
+    private FeuModeleInterface model;
+    private final CarrefourServeurInterface serveur;
     private CarrefourView client;
     private Properties prop;
     private FeuPieton feuP_NS;
@@ -48,10 +51,13 @@ public class ClientAdm extends javax.swing.JFrame {
         initComponents();
         prop = new Properties();
         try {
-            prop.load(new FileInputStream("src/be/esi/g34754/alg3/carrefour/client/adm/dureeFeux.properties"));
+            prop.load(new FileInputStream("../dureeFeux.properties"));
         } catch (IOException ex) {
+            try {
+                prop.load(new FileInputStream("dureeFeux.properties"));
+            } catch (IOException ex1) {
+            }
         }
-        this.serveur = serveur;
         try {
             this.client = new ClientAdmImpl(this);
             serveur.addListener(client);
@@ -73,6 +79,19 @@ public class ClientAdm extends javax.swing.JFrame {
         feuVoiture7.setAxeNS(false);
         feuPieton6.setAxeNS(false);
         feuPieton7.setAxeNS(false);
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                desabonner();
+            }
+        });
+    }
+
+    public void desabonner() {
+        try {
+            serveur.removeListener(client);
+        } catch (RemoteException ex) {
+        }
     }
 
     /**
@@ -143,7 +162,7 @@ public class ClientAdm extends javax.swing.JFrame {
         tempsReelPanelLayout.setHorizontalGroup(
             tempsReelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tempsReelPanelLayout.createSequentialGroup()
-                .addContainerGap(23, Short.MAX_VALUE)
+                .addContainerGap(49, Short.MAX_VALUE)
                 .addComponent(feuVoiture6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(feuPieton6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -404,15 +423,15 @@ public class ClientAdm extends javax.swing.JFrame {
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(10, 10, 10)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(VNSVert, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
+                    .addComponent(VNSVert, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(VEOVert, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(VEOOrange, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)
+                    .addComponent(VEOOrange, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(VNSOrange, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(VNSRouge, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)
+                    .addComponent(VNSRouge, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(VEORouge, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -479,7 +498,7 @@ public class ClientAdm extends javax.swing.JFrame {
             }
         });
 
-        fermer.setText("Fermer");
+        fermer.setText("Sauvegarder");
         fermer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fermerActionPerformed(evt);
@@ -502,7 +521,7 @@ public class ClientAdm extends javax.swing.JFrame {
                 .addGroup(admPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 745, Short.MAX_VALUE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(admPanelLayout.createSequentialGroup()
                         .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -572,14 +591,13 @@ public class ClientAdm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void appliquerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_appliquerActionPerformed
-        if (valide()) {
+        if (valide())
             try {
                 ecrireProperties();
                 serveur.setArret();
             } catch (RemoteException ex) {
                 Logger.getLogger(ClientAdm.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
     }//GEN-LAST:event_appliquerActionPerformed
 
     private void annulerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_annulerActionPerformed
@@ -587,12 +605,11 @@ public class ClientAdm extends javax.swing.JFrame {
     }//GEN-LAST:event_annulerActionPerformed
 
     private void fermerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fermerActionPerformed
-        System.exit(0);
+        ecrireProperties();
     }//GEN-LAST:event_fermerActionPerformed
 
     private void visualiserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_visualiserActionPerformed
         if (!visualisationDemarree) {
-            System.out.println("debut");
             model = new FeuModel(vitesse.getValue());
             setValuesModel();
             feuP_EO.setModel(model);
@@ -602,7 +619,6 @@ public class ClientAdm extends javax.swing.JFrame {
             model.demarrer();
             visualisationDemarree = true;
         } else {
-            System.out.println("arret");
             model.arreter();
             model = null;
             feuP_EO.removeFromModel();
@@ -786,17 +802,14 @@ public class ClientAdm extends javax.swing.JFrame {
     }
 
     private int mAJ(Feu feu, int restant) {
-        if (restant == 0) {
+        if (restant == 0)
             restant = feu.setEtatSuivant();
-        }
         restant--;
         if (!feu.getEtat().getCouleur().equals(CouleurEnum.ROUGE)) {
-            if (feu.getEtat().getCouleur().equals(CouleurEnum.VERT)) {
+            if (feu.getEtat().getCouleur().equals(CouleurEnum.VERT))
                 restant = 0;
-            }
-            if (restant == 0) {
+            if (restant == 0)
                 restant = feu.setEtatSuivant();
-            }
             restant--;
         }
 

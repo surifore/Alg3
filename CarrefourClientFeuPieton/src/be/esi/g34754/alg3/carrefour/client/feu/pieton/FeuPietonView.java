@@ -6,6 +6,9 @@ package be.esi.g34754.alg3.carrefour.client.feu.pieton;
 
 import be.esi.g34754.alg3.carrefour.interfaces.CarrefourServeurInterface;
 import be.esi.g34754.rmioutils.Connection;
+import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -71,6 +74,11 @@ public class FeuPietonView extends javax.swing.JFrame {
         );
 
         poussoir.setText("Moi d'abord");
+        poussoir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                poussoirActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -103,6 +111,14 @@ public class FeuPietonView extends javax.swing.JFrame {
         feu.setAxeNS(axe.getSelectedIndex()==0?true:false);
         feu.initLed();
     }//GEN-LAST:event_axeActionPerformed
+
+    private void poussoirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_poussoirActionPerformed
+        try {
+            feu.demandeVert();
+        } catch (RemoteException ex) {
+            Logger.getLogger(FeuPietonView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_poussoirActionPerformed
 
     /**
      * @param args the command line arguments

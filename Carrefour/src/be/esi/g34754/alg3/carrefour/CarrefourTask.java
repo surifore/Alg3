@@ -4,6 +4,9 @@
  */
 package be.esi.g34754.alg3.carrefour;
 
+import be.esi.g34754.alg3.carrefour.database.CarrefourDB;
+import be.esi.g34754.alg3.carrefour.entity.ChangementFeu;
+import be.esi.g34754.alg3.carrefour.interfaces.FeuModeleInterface;
 import java.io.Serializable;
 import java.util.TimerTask;
 
@@ -11,7 +14,7 @@ import java.util.TimerTask;
  *
  * @author g34754
  */
-public class CarrefourTask extends TimerTask implements Serializable{
+public class CarrefourTask extends TimerTask implements Serializable {
 
     private Etat etat;
     private int[] restant;
@@ -39,56 +42,44 @@ public class CarrefourTask extends TimerTask implements Serializable{
         if ((etat.getFeuxP_NS().isStop() && etat.getFeuxP_NS().etat.getCouleur().equals(CouleurEnum.ROUGE))
                 && (etat.getFeuxV_NS().isStop() && etat.getFeuxV_NS().etat.getCouleur().equals(CouleurEnum.ROUGE))
                 && (etat.getFeuxP_EO().isStop() && etat.getFeuxP_EO().etat.getCouleur().equals(CouleurEnum.ROUGE))
-                && (etat.getFeuxV_EO().isStop() && etat.getFeuxV_EO().etat.getCouleur().equals(CouleurEnum.ROUGE))) {
-            System.out.println("Attention TousRouge");
+                && (etat.getFeuxV_EO().isStop() && etat.getFeuxV_EO().etat.getCouleur().equals(CouleurEnum.ROUGE)))
             if (!isArret()) {
-                System.out.println("Attention En panne");
                 model.setEnPanne();
-                arret=false;
-            }else{
-                System.out.println("Attention signal ok");
+                arret = false;
+            } else {
                 model.refresh();
-                arret=false;
+                arret = false;
                 etat.getFeuxP_EO().setStop(false);
                 etat.getFeuxV_EO().setStop(false);
                 etat.getFeuxP_NS().setStop(false);
                 etat.getFeuxV_NS().setStop(false);
             }
-        } else {
+        else {
             restant[0] = mAJ(etat.getFeuxP_NS(), restant[0]);
             restant[1] = mAJ(etat.getFeuxP_EO(), restant[1]);
             restant[2] = mAJ(etat.getFeuxV_NS(), restant[2]);
             restant[3] = mAJ(etat.getFeuxV_EO(), restant[3]);
             model.notifierChangement();
         }
-        System.out.println(etat);
     }
 
     private int mAJ(Feu feu, int restant) {
-        if (!feu.isEnPanne()) {
+        if (!feu.isEnPanne())
             if (!feu.isStop()) {
                 if (restant == 0) {
                     restant = feu.setEtatSuivant();
+                    new CarrefourDB().saveChangement(new ChangementFeu(etat));
                 }
                 restant--;
-            } else {
-                if (!feu.etat.getCouleur().equals(CouleurEnum.ROUGE)) {
-                    if (feu.etat.getCouleur().equals(CouleurEnum.VERT)) {
-                        restant = 0;
-                    }
-                    if (restant == 0) {
-                        restant = feu.setEtatSuivant();
-                    }
-                    restant--;
+            } else if (!feu.etat.getCouleur().equals(CouleurEnum.ROUGE)) {
+                if (feu.etat.getCouleur().equals(CouleurEnum.VERT))
+                    restant = 0;
+                if (restant == 0){
+                    restant = feu.setEtatSuivant();
+                    new CarrefourDB().saveChangement(new ChangementFeu(etat));
                 }
+                restant--;
             }
-        }else{
-            if (!(feu.etat.getCouleur().equals(CouleurEnum.ORANGE)||(feu.etat.getCouleur().equals(CouleurEnum.VERT)&&feu.etat.isClignotant()))) {
-                System.out.println("Attention met à l'orange");
-            }else{
-                System.out.println("c'est à l'orange");
-            }
-        }
         return restant;
     }
 
@@ -104,5 +95,15 @@ public class CarrefourTask extends TimerTask implements Serializable{
      */
     public void setArret(boolean arret) {
         this.arret = arret;
+    }
+
+    int[] getRestant() {
+        return restant;
+    }
+
+    void decremente(int decrement) {
+        for (int i = 0; i < 4; i++) {
+            restant[i] -= decrement;
+        }
     }
 }

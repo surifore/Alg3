@@ -119,7 +119,7 @@ public class Led extends javax.swing.JPanel implements Serializable {
         setOn(!on);
     }
 
-    public boolean isClognotant() {
+    public boolean isClignotant() {
         return clignote;
     }
 
@@ -128,7 +128,7 @@ public class Led extends javax.swing.JPanel implements Serializable {
             this.clignote = clignote;
             if (this.clignote) {
                 clignoteTimer = new Timer();
-                clignoteTimer.schedule(new LedTimerTask(this), 0, 500/multiplicateur);
+                clignoteTimer.schedule(new LedTimerTask(this), 0, 500 / multiplicateur);
             } else {
                 clignoteTimer.cancel();
             }

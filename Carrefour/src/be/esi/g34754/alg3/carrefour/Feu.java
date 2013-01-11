@@ -4,6 +4,8 @@
  */
 package be.esi.g34754.alg3.carrefour;
 
+import be.esi.g34754.alg3.carrefour.database.CarrefourDB;
+import be.esi.g34754.alg3.carrefour.entity.ChangementFeu;
 import java.io.Serializable;
 
 /**

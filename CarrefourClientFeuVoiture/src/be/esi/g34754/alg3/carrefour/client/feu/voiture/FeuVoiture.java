@@ -5,7 +5,7 @@
 package be.esi.g34754.alg3.carrefour.client.feu.voiture;
 
 import be.esi.g34754.alg3.carrefour.CouleurEnum;
-import be.esi.g34754.alg3.carrefour.FeuModeleInterface;
+import be.esi.g34754.alg3.carrefour.interfaces.FeuModeleInterface;
 import be.esi.g34754.alg3.carrefour.interfaces.CarrefourServeurInterface;
 import be.esi.g34754.alg3.carrefour.interfaces.CarrefourView;
 import java.awt.Color;

@@ -5,10 +5,14 @@
 package be.esi.g34754.alg3.carrefour;
 
 import be.esi.g34754.alg3.carrefour.interfaces.CarrefourView;
+import be.esi.g34754.alg3.carrefour.interfaces.FeuModeleInterface;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -16,7 +20,7 @@ import javax.swing.JOptionPane;
  *
  * @author g34754
  */
-public class FeuModel implements FeuModeleInterface,Serializable {
+public class FeuModel implements FeuModeleInterface, Serializable {
 
     private List<CarrefourView> vues;
     private Etat etat;
@@ -28,15 +32,15 @@ public class FeuModel implements FeuModeleInterface,Serializable {
         etat = new Etat();
         vues = new ArrayList<CarrefourView>();
         demarrage = new TimerCarrefour();
-        this.vitesse=vitesse;
+        this.vitesse = vitesse;
     }
 
-    public FeuModel(int vert, int orange, int rouge,int vitesse) {
-        etat = new Etat(new FeuPieton(vert, orange, rouge,1), new FeuPieton(vert, orange, rouge,1),
-                new FeuVoiture(vert, orange, rouge,1), new FeuVoiture(vert, orange, rouge,1));
+    public FeuModel(int vert, int orange, int rouge, int vitesse) {
+        etat = new Etat(new FeuPieton(vert, orange, rouge, 1), new FeuPieton(vert, orange, rouge, 1),
+                new FeuVoiture(vert, orange, rouge, 1), new FeuVoiture(vert, orange, rouge, 1));
         vues = new ArrayList<CarrefourView>();
         demarrage = new TimerCarrefour();
-        this.vitesse=vitesse;
+        this.vitesse = vitesse;
     }
 
     @Override
@@ -101,10 +105,11 @@ public class FeuModel implements FeuModeleInterface,Serializable {
 
     @Override
     public final void demarrer() {
-        tache=new CarrefourTask(etat, this);
-        demarrage.schedule(tache, 0, 1000/vitesse);
+        tache = new CarrefourTask(etat, this);
+        demarrage.schedule(tache, 0, 1000 / vitesse);
     }
 
+    @Override
     public void setTousRouge(int value) {
         etat.setTousRouge(value);
     }
@@ -128,7 +133,34 @@ public class FeuModel implements FeuModeleInterface,Serializable {
         }
     }
 
+    @Override
     public void arreter() {
         demarrage.cancel();
+    }
+
+    @Override
+    public void demandeVert(boolean axeNS) {
+        int restant[] = tache.getRestant();
+        Properties prop=new Properties();
+        try {
+            prop.load(new FileInputStream("../dureeFeux.properties"));
+        } catch (IOException ex) {
+            try {
+                prop.load(new FileInputStream("dureeFeux.properties"));
+            } catch (IOException ex1) {
+            }
+        }
+        int min=Integer.parseInt(prop.getProperty("minVert", "3"));
+
+        if (axeNS)
+            if (restant[2] > min)
+                tache.decremente(restant[2] - min);
+            else
+                tache.decremente(restant[2]);
+        else
+            if (restant[3] > min)
+                tache.decremente(restant[3] - min);
+            else
+                tache.decremente(restant[3]);
     }
 }
