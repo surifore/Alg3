@@ -28,8 +28,8 @@ public class FeuVoitureImpl extends UnicastRemoteObject implements CarrefourView
     public void notifieTousRouge() throws RemoteException {        
     }
 
-    @Override
-    public boolean isFeu() throws RemoteException {
-        return true;
-    }
+//    @Override
+//    public boolean isFeu() throws RemoteException {
+//        return true;
+//    }
 }

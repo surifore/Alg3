@@ -11,8 +11,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author g34754
+ * Fenêtre de vue d'un feu piéton
+ * @author Florian Delporte
  */
 public class FeuPietonView extends javax.swing.JFrame {
 

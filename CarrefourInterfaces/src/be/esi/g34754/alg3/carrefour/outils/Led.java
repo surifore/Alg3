@@ -119,10 +119,18 @@ public class Led extends javax.swing.JPanel implements Serializable {
         setOn(!on);
     }
 
+    /**
+     * Permet de récupérer le clignottement de la Led
+     * @return le clignottement de la Led
+     */
     public boolean isClignotant() {
         return clignote;
     }
 
+    /**
+     * Permet de modifier le clignottement de la Led
+     * @param clignote le clignottement de la Led
+     */
     public void setClignotant(boolean clignote) {
         if (this.clignote != clignote) {
             this.clignote = clignote;

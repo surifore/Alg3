@@ -5,7 +5,7 @@
 package be.esi.g34754.alg3.carrefour.client.feu.voiture;
 
 import be.esi.g34754.alg3.carrefour.CouleurEnum;
-import be.esi.g34754.alg3.carrefour.interfaces.FeuModeleInterface;
+import be.esi.g34754.alg3.carrefour.FeuModeleInterface;
 import be.esi.g34754.alg3.carrefour.interfaces.CarrefourServeurInterface;
 import be.esi.g34754.alg3.carrefour.interfaces.CarrefourView;
 import java.awt.Color;
@@ -15,8 +15,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author g34754
+ * Construit une vue d'un feu voiture
+ * @author Florian Delporte
  */
 public class FeuVoiture extends javax.swing.JPanel implements Serializable {
 
@@ -27,6 +27,7 @@ public class FeuVoiture extends javax.swing.JPanel implements Serializable {
 
     /**
      * Creates new form FeuPieto
+     * @param le serveur auquel s'abonner
      */
     public FeuVoiture(CarrefourServeurInterface serveur) {
         if (serveur == null) {
@@ -48,6 +49,7 @@ public class FeuVoiture extends javax.swing.JPanel implements Serializable {
 
     /**
      * Creates new form FeuPieto
+     * @param model le modèle à attribuer à la form
      */
     public FeuVoiture(FeuModeleInterface model) {
         try {
@@ -65,6 +67,9 @@ public class FeuVoiture extends javax.swing.JPanel implements Serializable {
         }
     }
 
+    /**
+     * Creates new form
+     */
     public FeuVoiture(){
         initComponents();
         this.model = null;
@@ -167,27 +172,30 @@ public class FeuVoiture extends javax.swing.JPanel implements Serializable {
     private be.esi.g34754.alg3.carrefour.outils.Led ledVert;
     // End of variables declaration//GEN-END:variables
 
+    /**
+     * Initialise les led du feu
+     */
     public final void initLed() {
         if (serveur != null) {
             try {
                 if (axeNS) {
-                    led(serveur.getModel().getEtat().getFeuxV_NS());
+                    setLeds(serveur.getModel().getEtat().getFeuxV_NS());
                 } else {
-                    led(serveur.getModel().getEtat().getFeuxV_EO());
+                    setLeds(serveur.getModel().getEtat().getFeuxV_EO());
                 }
             } catch (RemoteException ex) {
                 Logger.getLogger(FeuVoiture.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
             if (axeNS) {
-                led(model.getEtat().getFeuxV_NS());
+                setLeds(model.getEtat().getFeuxV_NS());
             } else {
-                led(model.getEtat().getFeuxV_EO());
+                setLeds(model.getEtat().getFeuxV_EO());
             }
         }
     }
 
-    private void led(be.esi.g34754.alg3.carrefour.FeuVoiture feu) {
+    public void setLeds(be.esi.g34754.alg3.carrefour.FeuVoiture feu) {
         if (feu.isEnPanne()) {
             ledRouge.setOn(false);
             ledOrange.setOn(true);
@@ -210,13 +218,26 @@ public class FeuVoiture extends javax.swing.JPanel implements Serializable {
         }
     }
     
+    /**
+     * désabonne le vue du modèle
+     */
     public void removeFromModel() {
         model.removeCarrefourListener(client);
     }
     
+    /**
+     * désactive les led
+     */
     public void clearLed() {
         ledRouge.setOn(false);
         ledOrange.setOn(false);
         ledVert.setOn(false);
+    }
+
+    /**
+     * désabonne le vue du modèle
+     */
+    public void desabonner() throws RemoteException {
+        serveur.removeListener(client);
     }
 }

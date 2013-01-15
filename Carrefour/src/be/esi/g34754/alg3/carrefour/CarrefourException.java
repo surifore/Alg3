@@ -5,8 +5,8 @@
 package be.esi.g34754.alg3.carrefour;
 
 /**
- *
- * @author Florian
+ * Classe d'exception concernant le Carrefour
+ * @author Florian Delporte
  */
 public class CarrefourException extends Exception {
 

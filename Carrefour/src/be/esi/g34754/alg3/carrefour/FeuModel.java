@@ -4,8 +4,8 @@
  */
 package be.esi.g34754.alg3.carrefour;
 
+//import be.esi.g34754.alg3.carrefour.interfaces.CarrefourView;
 import be.esi.g34754.alg3.carrefour.interfaces.CarrefourView;
-import be.esi.g34754.alg3.carrefour.interfaces.FeuModeleInterface;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Serializable;
@@ -17,8 +17,9 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
+ * Le modèle d'un Carrefour
  *
- * @author g34754
+ * @author Florian Delporte
  */
 public class FeuModel implements FeuModeleInterface, Serializable {
 
@@ -28,6 +29,11 @@ public class FeuModel implements FeuModeleInterface, Serializable {
     private CarrefourTask tache;
     protected int vitesse;
 
+    /**
+     * Permet de créer un modèle
+     *
+     * @param vitesse la vitesse d'exécution du modèle
+     */
     public FeuModel(int vitesse) {
         etat = new Etat();
         vues = new ArrayList<CarrefourView>();
@@ -35,6 +41,14 @@ public class FeuModel implements FeuModeleInterface, Serializable {
         this.vitesse = vitesse;
     }
 
+    /**
+     * Permet de créer un modèle
+     *
+     * @param vert la durée du feu vert
+     * @param orange la durée du feu orange
+     * @param rouge la durée du feu rouge
+     * @param vitesse la vitesse d'exécution du modèle
+     */
     public FeuModel(int vert, int orange, int rouge, int vitesse) {
         etat = new Etat(new FeuPieton(vert, orange, rouge, 1), new FeuPieton(vert, orange, rouge, 1),
                 new FeuVoiture(vert, orange, rouge, 1), new FeuVoiture(vert, orange, rouge, 1));
@@ -43,24 +57,42 @@ public class FeuModel implements FeuModeleInterface, Serializable {
         this.vitesse = vitesse;
     }
 
+    /**
+     * Retourne l'état du carrefour
+     *
+     * @return l'état du carrefour
+     */
     @Override
     public Etat getEtat() {
-        demarrage = new TimerCarrefour();
+//        demarrage = new TimerCarrefour();
         return new Etat(etat.getFeuxP_NS(), etat.getFeuxP_EO(), etat.getFeuxV_NS(), etat.getFeuxV_EO());
     }
 
+    /**
+     * Permet d'ajouter une vue au modèle.
+     *
+     * @param add la vue à ajouter au modèle
+     */
     @Override
     public void addCarrefourListener(CarrefourView add) {
         vues.add(add);
         fire();
     }
 
+    /**
+     * Permet de retirer une vue du modèle
+     *
+     * @param add la vue à retirer du modèle
+     */
     @Override
     public void removeCarrefourListener(CarrefourView add) {
         vues.remove(add);
         fire();
     }
 
+    /**
+     * Permet au modèle de notifier un changement aux vues qui lui sont abonnées
+     */
     @Override
     public void notifierChangement() {
         fire();
@@ -78,6 +110,9 @@ public class FeuModel implements FeuModeleInterface, Serializable {
         }
     }
 
+    /**
+     * Permet de mettre tous les feux au rouge
+     */
     @Override
     public void setStop() {
         etat.getFeuxP_EO().setStop(true);
@@ -86,6 +121,9 @@ public class FeuModel implements FeuModeleInterface, Serializable {
         etat.getFeuxV_NS().setStop(true);
     }
 
+    /**
+     * Permet de mettre tous les feux en panne
+     */
     @Override
     public void setEnPanne() {
         etat.getFeuxP_EO().setEnPanne(true);
@@ -96,30 +134,44 @@ public class FeuModel implements FeuModeleInterface, Serializable {
     }
 
     /**
-     * @return the vitesse
+     * @return the vitesse d'exécution du carrefour
      */
     @Override
     public int getVitesse() {
         return vitesse;
     }
 
+    /**
+     * Permet de démarrer l'exécution du carrefour
+     */
     @Override
-    public final void demarrer() {
-        tache = new CarrefourTask(etat, this);
+    public final void demarrer(boolean principal) {
+        tache = new CarrefourTask(etat, this, principal);
         demarrage.schedule(tache, 0, 1000 / vitesse);
     }
 
+    /**
+     * modifie la durée pendant lequel tous les feux sont au rouge
+     *
+     * @param value
+     */
     @Override
     public void setTousRouge(int value) {
         etat.setTousRouge(value);
     }
 
+    /**
+     * Permet de mettre tous les feux au rouge
+     */
     @Override
     public void setArret() {
         tache.setArret(true);
         setStop();
     }
 
+    /**
+     * Met à jour les vues du carrefour
+     */
     @Override
     public void refresh() {
         for (CarrefourView vue : vues) {
@@ -133,15 +185,23 @@ public class FeuModel implements FeuModeleInterface, Serializable {
         }
     }
 
+    /**
+     * Permet d'arrêter l'exécution du Carrefour
+     */
     @Override
     public void arreter() {
         demarrage.cancel();
     }
 
+    /**
+     * Permet de demander le pâssage du feuPieton au vert
+     *
+     * @param axeNS l'axe sur lequel le pieton demande le passage au vert.
+     */
     @Override
     public void demandeVert(boolean axeNS) {
         int restant[] = tache.getRestant();
-        Properties prop=new Properties();
+        Properties prop = new Properties();
         try {
             prop.load(new FileInputStream("../dureeFeux.properties"));
         } catch (IOException ex) {
@@ -150,17 +210,18 @@ public class FeuModel implements FeuModeleInterface, Serializable {
             } catch (IOException ex1) {
             }
         }
-        int min=Integer.parseInt(prop.getProperty("minVert", "3"));
+        int min = Integer.parseInt(prop.getProperty("minVert", "3"));
 
-        if (axeNS)
-            if (restant[2] > min)
+        if (axeNS) {
+            if (restant[2] > min) {
                 tache.decremente(restant[2] - min);
-            else
+            } else {
                 tache.decremente(restant[2]);
-        else
-            if (restant[3] > min)
-                tache.decremente(restant[3] - min);
-            else
-                tache.decremente(restant[3]);
+            }
+        } else if (restant[3] > min) {
+            tache.decremente(restant[3] - min);
+        } else {
+            tache.decremente(restant[3]);
+        }
     }
 }

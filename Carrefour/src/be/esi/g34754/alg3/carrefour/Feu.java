@@ -4,13 +4,11 @@
  */
 package be.esi.g34754.alg3.carrefour;
 
-import be.esi.g34754.alg3.carrefour.database.CarrefourDB;
-import be.esi.g34754.alg3.carrefour.entity.ChangementFeu;
 import java.io.Serializable;
 
 /**
- *
- * @author g34754
+ * Classe d'un Feu du carrefour
+ * @author Florian Delporte
  */
 public abstract class Feu implements Serializable {
 
@@ -23,6 +21,10 @@ public abstract class Feu implements Serializable {
     protected EtatFeu etat;
     protected boolean stop;
 
+    /**
+     * Permet à un feu d'être mis à l'état suivant.
+     * @return la durée de l'état suivant.
+     */
     public int setEtatSuivant() {
         int restant = -1;
         switch (etat.getCouleur()) {
@@ -50,13 +52,15 @@ public abstract class Feu implements Serializable {
     }
 
     /**
-     * @return the rouge
+     * Retourne la durée de la durée du feu rouge
+     * @return la durée de la durée du feu rouge
      */
     public int getRouge() {
         return rouge;
     }
 
     /**
+     * Modifie la durée du feu rouge
      * @param rouge the rouge to set
      */
     public void setRouge(int rouge) {
@@ -64,103 +68,128 @@ public abstract class Feu implements Serializable {
     }
 
     /**
-     * @return the vert
+     * Retourne la durée de la durée du feu vert
+     * @return la durée de la durée du feu vert
      */
     public int getVert() {
         return vert;
     }
 
     /**
-     * @param vert the vert to set
+     * Modifie la durée du feu vert
+     * @param rouge the vert to set
      */
     public void setVert(int vert) {
         this.vert = vert;
     }
 
     /**
-     * @return the orange
+     * Retourne la durée de la durée du feu orange
+     * @return la durée de la durée du feu orange
      */
     public int getOrange() {
         return orange;
     }
 
     /**
-     * @param orange the orange to set
+     * Modifie la durée du feu orange
+     * @param rouge the orange to set
      */
     public void setOrange(int orange) {
         this.orange = orange;
     }
 
     /**
-     * @return the enPanne
+     * Permet de savoir si un feu est en panne
+     * @return si un feu est en panne
      */
     public boolean isEnPanne() {
         return enPanne;
     }
 
     /**
-     * @param enPanne the enPanne to set
+     * Permet de mettre un feu en panne
+     * @param enPanne la valeur à attribuer au feu.
      */
     public void setEnPanne(boolean enPanne) {
         this.enPanne = enPanne;
     }
 
     /**
-     * @return the pieton
+     * Permet de savoir si un feu est un feu pieton
+     * @return si un feu est un feu pieton
      */
     public boolean isPieton() {
         return pieton;
     }
 
     /**
-     * @param pieton the pieton to set
+     * modifie le type de feu
+     * @param pieton le type de feu.
      */
     public void setPieton(boolean pieton) {
         this.pieton = pieton;
     }
 
+    /**
+     * Permet de récupérer l'état d'un feu
+     * @return l'état du feu
+     */
     public EtatFeu getEtat() {
         return etat;
     }
 
     /**
-     * @param etat the etat to set
+     * Modifie l'état d'un feu
+     * @param etat l'état du feu à attribuer
      */
     public void setEtat(EtatFeu etat) {
         this.etat = etat;
     }
     
     /**
-     * @param etat the etat to set
+     * Modifie la couleur du feu
+     * @param etat la couleur du feu
      */
     public void setEtat(CouleurEnum color) {
         etat.setCouleur(color);
     }
     
     /**
-     * @param etat the etat to set
+     * Modifie le clignotement du feu
+     * @param etat le clignotement du feu     
      */
     public void setEtat(boolean clignotant) {
         etat.setClignotant(clignotant);
     }
     
+    /**
+     * Permet de savoir si le feu est à arrêter
+     * @return savoir si le feu est à arrêter
+     */
     public boolean isStop() {
         return stop;
     }
 
+    /**
+     * Permet d'arrêter le feu
+     * @param stop arrêter le feu
+     */
     public void setStop(boolean stop) {
         this.stop = stop;
     }
 
     /**
-     * @return the tousRouge
+     * Retourne la durée où tous les feux sont au rouge
+     * @return la durée où tous les feux sont au rouge
      */
     public int getTousRouge() {
         return tousRouge;
     }
 
     /**
-     * @param tousRouge the tousRouge to set
+     * Modifie la durée où tous les feux sont au rouge
+     * @param tousRouge la durée où tous les feux sont au rouge à attribuer
      */
     public void setTousRouge(int tousRouge) {
         this.tousRouge = tousRouge;

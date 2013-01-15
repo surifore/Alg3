@@ -8,15 +8,24 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 /**
- *
- * @author g34754
+ * Classe des vues du Carrefour
+ * @author Florian Delporte
  */
 public interface CarrefourView extends Remote{
 
+    /**
+     * Permet aux vues d'être notifiées du changement du modèle
+     * @param changement Si un changement de l'etat du carrefour a eu lieu.
+     * @throws RemoteException Si une erreur survient pendant la communication
+     */
     public void notifieChangement()throws RemoteException;
 
+    /**
+     * Permet à une vue d'être notifiée que tous les feux sont au rouge
+     * @throws RemoteException Si une erreur survient pendant la communication
+     */
     public void notifieTousRouge()throws RemoteException;
 
-    public boolean isFeu()throws RemoteException;
+//    public boolean isFeu()throws RemoteException;
     
 }

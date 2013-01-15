@@ -5,20 +5,24 @@
 package be.esi.g34754.alg3.carrefour;
 
 /**
- *
- * @author g34754
+ * Les couleurs possibles pour un Feu.
+ * @author Florian Delporte
  */
 public enum CouleurEnum {
-
     VERT, ORANGE, ROUGE;
 
-    public static short shortValueOf(String toString) {
-        switch (toString) {
-            case "VERT":
+    /**
+     * Permet de renvoyer le numéro de la couleur
+     * @param couleur la couleur du Feu
+     * @return le numéro de la couleur
+     */
+    public static short shortValueOf(CouleurEnum couleur) {
+        switch (couleur) {
+            case VERT:
                 return 0;
-            case "ORANGE":
+            case ORANGE:
                 return 1;
-            case "ROUGE":
+            case ROUGE:
                 return 2;
             default:
                 throw new IllegalArgumentException("Valeur d'énumération incorrecte.");

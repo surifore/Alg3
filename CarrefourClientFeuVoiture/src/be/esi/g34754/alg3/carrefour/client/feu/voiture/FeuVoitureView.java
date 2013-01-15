@@ -6,11 +6,10 @@ package be.esi.g34754.alg3.carrefour.client.feu.voiture;
 
 import be.esi.g34754.alg3.carrefour.interfaces.CarrefourServeurInterface;
 import be.esi.g34754.rmioutils.Connection;
-import java.awt.FlowLayout;
 
 /**
- *
- * @author g34754
+ * Construit une vue d'un feu voiture
+ * @author Florian Delporte
  */
 public class FeuVoitureView extends javax.swing.JFrame {
 

@@ -5,18 +5,18 @@
 package be.esi.g34754.alg3.carrefour.client.feu.pieton;
 
 import be.esi.g34754.alg3.carrefour.CouleurEnum;
-import be.esi.g34754.alg3.carrefour.interfaces.FeuModeleInterface;
+import be.esi.g34754.alg3.carrefour.FeuModeleInterface;
 import be.esi.g34754.alg3.carrefour.interfaces.CarrefourServeurInterface;
 import be.esi.g34754.alg3.carrefour.interfaces.CarrefourView;
 import java.awt.Color;
 import java.io.Serializable;
 import java.rmi.RemoteException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
+ * Panel contenant les feux vert et rouge d'un feu Pieton.
  *
- * @author Florian
+ * @author Florian Delporte
  */
 public class FeuPieton extends javax.swing.JPanel implements Serializable {
 
@@ -26,7 +26,10 @@ public class FeuPieton extends javax.swing.JPanel implements Serializable {
     private boolean axeNS;
 
     /**
-     * Creates new form FeuPieto
+     * Creates new form FeuPieton
+     *
+     * @param serveur Le serveur du carrefour qui contient le modèle du
+     * carrefour.
      */
     public FeuPieton(CarrefourServeurInterface serveur) {
         if (serveur == null) {
@@ -43,12 +46,15 @@ public class FeuPieton extends javax.swing.JPanel implements Serializable {
             initLed();
             serveur.addListener(client);
         } catch (RemoteException ex) {
-            Logger.getLogger(FeuPietonView.class.getName()).log(Level.SEVERE, null, ex);
+            miseEnPanne();
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     /**
-     * Creates new form FeuPieto
+     * Creates new form FeuPieton
+     *
+     * @param model Le modèle du carrefour.
      */
     public FeuPieton(FeuModeleInterface model) {
         try {
@@ -62,12 +68,13 @@ public class FeuPieton extends javax.swing.JPanel implements Serializable {
             initLed();
             model.addCarrefourListener(client);
         } catch (RemoteException ex) {
-            Logger.getLogger(FeuPieton.class.getName()).log(Level.SEVERE, null, ex);
+            miseEnPanne();
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     /**
-     * Creates new form FeuPieto
+     * Creates new form FeuPieton qui n'est pas abonné à un modèle
      */
     public FeuPieton() {
         initComponents();
@@ -78,6 +85,11 @@ public class FeuPieton extends javax.swing.JPanel implements Serializable {
         axeNS = true;
     }
 
+    /**
+     * Permet d'assigner un modèle au FeuPieton
+     *
+     * @param model Le modèle à assigner au modèle.
+     */
     public void setModel(FeuModeleInterface model) {
         try {
             this.model = model;
@@ -85,11 +97,18 @@ public class FeuPieton extends javax.swing.JPanel implements Serializable {
             client = new FeuPietonImpl(this);
             model.addCarrefourListener(client);
         } catch (RemoteException ex) {
-            Logger.getLogger(FeuPieton.class.getName()).log(Level.SEVERE, null, ex);
+            miseEnPanne();
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
         }
 
     }
 
+    /**
+     * Permet de renseigner l'axe du FeuPieton.
+     *
+     * @param axeNS L'axe du FeuPieton. Vrai si le FeuPieton se trouve sur l'axe
+     * Nord-Sud.
+     */
     public void setAxeNS(boolean axeNS) {
         this.axeNS = axeNS;
     }
@@ -157,60 +176,90 @@ public class FeuPieton extends javax.swing.JPanel implements Serializable {
     private be.esi.g34754.alg3.carrefour.outils.Led ledVert;
     // End of variables declaration//GEN-END:variables
 
+    /**
+     * Permet d'initialiser les Led du FeuPieton.
+     */
     public final void initLed() {
         if (serveur != null) {
             try {
                 if (axeNS) {
-                    led(serveur.getModel().getEtat().getFeuxP_NS());
+                    setLeds(serveur.getModel().getEtat().getFeuxP_NS());
                 } else {
-                    led(serveur.getModel().getEtat().getFeuxP_EO());
+                    setLeds(serveur.getModel().getEtat().getFeuxP_EO());
                 }
             } catch (RemoteException ex) {
-                Logger.getLogger(FeuPietonView.class.getName()).log(Level.SEVERE, null, ex);
+                miseEnPanne();
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
             }
+        } else if (axeNS) {
+            setLeds(model.getEtat().getFeuxP_NS());
         } else {
-            if (axeNS) {
-                led(model.getEtat().getFeuxP_NS());
-            } else {
-                led(model.getEtat().getFeuxP_EO());
-            }
+            setLeds(model.getEtat().getFeuxP_EO());
         }
     }
 
-    private void led(be.esi.g34754.alg3.carrefour.FeuPieton feu) {
+    /**
+     * Permet de mettre à jour l'etat des Led du FeuPieton
+     *
+     * @param feu le Feu du modèle
+     */
+    public void setLeds(be.esi.g34754.alg3.carrefour.FeuPieton feu) {
         if (feu.isEnPanne()) {
             ledRouge.setOn(false);
             ledVert.setOn(false);
-        } else {
-            if (feu.getEtat().getCouleur() == CouleurEnum.VERT) {
-                if (feu.getEtat().isClignotant()) {
-                    ledRouge.setOn(false);
-                    ledVert.setOn(true);
-                    ledVert.setClignotant(true);
-                } else {
-                    ledRouge.setOn(false);
-                    ledVert.setOn(true);
-                    ledVert.setClignotant(false);
-                }
+        } else if (feu.getEtat().getCouleur() == CouleurEnum.VERT) {
+            if (feu.getEtat().isClignotant()) {
+                ledRouge.setOn(false);
+                ledVert.setOn(true);
+                ledVert.setClignotant(true);
             } else {
-                ledRouge.setOn(true);
-                ledVert.setOn(false);
+                ledRouge.setOn(false);
+                ledVert.setOn(true);
                 ledVert.setClignotant(false);
             }
+        } else {
+            ledRouge.setOn(true);
+            ledVert.setOn(false);
+            ledVert.setClignotant(false);
         }
     }
 
+    /**
+     * Permet de retirer le FeuPieton du modèle
+     */
     public void removeFromModel() {
         model.removeCarrefourListener(client);
     }
 
+    /**
+     * Permet de désactiver les Led du FeuPieton
+     */
     public void clearLed() {
         ledRouge.setOn(false);
         ledVert.setOn(false);
         ledVert.setClignotant(false);
     }
 
+    /**
+     * Permet au piéton de demander que le feu pieton passe au vert
+     *
+     * @throws RemoteException En cas de problème de communication avec le
+     * serveur.
+     */
     void demandeVert() throws RemoteException {
         serveur.demandeVert(axeNS);
     }
+
+    /**
+     * Permet au FeuPieton d'être mis en panne en cas de problème
+     */
+    private void miseEnPanne() {
+        ledRouge.setOn(false);
+        ledVert.setOn(false);
+    }
+
+    public void desabonner() throws RemoteException {
+        serveur.removeListener(client);
+    }
+
 }

@@ -8,8 +8,8 @@ import java.io.Serializable;
 import java.util.Timer;
 
 /**
- *
- * @author g34754
+ * Le timer du Carrefour
+ * @author Florian Delporte
  */
 public class TimerCarrefour extends Timer implements Serializable{
     
